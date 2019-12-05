@@ -1,0 +1,10 @@
+{
+  "PORT": 5000,
+  "DATABASE": {
+    "HOST": "18.162.125.153",
+    "USER": "phpmyadmin",
+    "PASSWORD": "2CGm{7f9d{!\"WYmQ",
+    "NAME": "examreg"
+  },
+  "SECRET_KEY": "pum9BT+Eu6{U-,1"
+}
