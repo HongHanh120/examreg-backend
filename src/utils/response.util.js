@@ -1,21 +1,12 @@
-function success({data}){
-    if(!data){
-        throw new Error("Missing data")
-    }
-    return{
+module.exports.success = ({data}) => {
+    if(!data) { throw new Error("missing data") }
+    return {
         success: true,
         data
     }
 };
 
-function fail({reason}) {
-    return{
-        success: false,
-        reason
-    }
-};
-
-module.exports = {
-    success,
-    fail
-};
+module.exports.fail = ({reason}) => ({
+    success: false,
+    reason
+});
