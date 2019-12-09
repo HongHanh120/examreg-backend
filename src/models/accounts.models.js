@@ -5,7 +5,6 @@ async function getUserByUsername(username) {
     const [rows] = await dbPool.query(`SELECT * 
                                          FROM accounts
                                          WHERE username = "${username}"`);
-    // console.log(rows);
     return [rows];
 }
 
@@ -13,7 +12,6 @@ async function getUserByEmail(email) {
     const [rows] = await dbPool.query(`SELECT * 
                                          FROM accounts
                                          WHERE email = "${email}"`);
-    // console.log(rows);
     return [rows];
 }
 

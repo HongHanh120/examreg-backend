@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8829d2a2-2345-45ea-bd61-42958e080920" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/controllers/students.controllers.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/models/students.models.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/models/rooms.models.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/rooms.models.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/accounts.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/accounts.controllers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/middlewares/loginToken.middlewares.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/middlewares/tokens.middlewares.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/accounts.models.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/accounts.models.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -73,6 +80,7 @@
       <workItem from="1575808100424" duration="15745000" />
       <workItem from="1575861511313" duration="3234000" />
       <workItem from="1575866797260" duration="6265000" />
+      <workItem from="1575876899389" duration="2627000" />
     </task>
     <servers />
   </component>

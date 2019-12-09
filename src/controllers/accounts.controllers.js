@@ -14,13 +14,9 @@ async function login(req, res) {
         let [user] = await account.getUserByUsername(username);
         if (!user.length)
             throw new Error('User name or password is incorrect');
-        console.log(user);
         user = user[0];
-        console.log(password);
         const hashPassword = user.password;
-        console.log(hashPassword);
         const checkPass = bcrypt.compareSync(password, hashPassword);
-        console.log(checkPass);
 
         if (!checkPass)
             throw new Error('User name or password is incorrect');
@@ -67,13 +63,11 @@ async function register(req, res) {
             throw new Error('Email field is missing');
 
         const [existedUser] = await account.getUserByUsername(username);
-        // console.log(existedUser.length);
         const [existedEmail] = await account.getUserByEmail(email);
-        // console.log(existedEmail.length);
         if (existedUser.length)
-            throw new Error("Username is existed");
-        if(existedEmail.length)
-            throw new Error("Email is existed");
+            throw new Error('Username is existed');
+        if (existedEmail.length)
+            throw new Error('Email is existed');
 
         let salt = await bcrypt.genSalt(10);
         let hashPassword = await bcrypt.hash(password, salt);
