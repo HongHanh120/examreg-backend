@@ -8,8 +8,11 @@ exports.createRoom = async (room = {}) => {
     return temp_id;
 };
 
-exports.getAllRoom = async (params = {}) => {
-    const query = `SELECT * FROM rooms`;
+exports.getAllRoom = async (params = {name}) => {
+    console.log(params);
+    const name = params;
+    console.log(name);
+    const query = `SELECT * FROM rooms WHERE name = "${name}"`;
     const [temp_id] = await dbPool.query(query);
     return temp_id;
 };
