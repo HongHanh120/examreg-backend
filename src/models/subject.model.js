@@ -1,4 +1,4 @@
-const dbPool = require('../../db');
+const dbPool = require('../db');
 const config = require('config');
 
 async function deleteSubject(course_codename) {
@@ -18,8 +18,9 @@ async function updateSubject(name,course_code,credit) {
 }
 
 async function createSubject(name,course_code,credit) {
-    await dbPool.query(`INSERT INTO subjects(name,course_code,credit)
-                            VALUES("${name}", "${course_code}", "${credit}"`);
+    await dbPool.query(`INSERT INTO subjects (name, course_code, credit) 
+                               VALUES ("${name}", "${course_code}", ${credit});`);
+
 }
 
 async function getSubjectbycourse_code(course_code) {

@@ -2,8 +2,8 @@ const bcrypt = require('bcrypt');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const responseUtil = require('../utils/response.util');
-const subject = require('./database/subject.database');
-const account = require('./database/accounts.database');
+const subject = require('../models/subject.model');
+const account = require('../models/accounts.model');
 
 
 async function createSubject(req, res) {
@@ -12,7 +12,6 @@ async function createSubject(req, res) {
         course_code,
         credit
     } = req.body;
-
     try {
         if (!course_code)
             throw new Error('course_code field is missing');
