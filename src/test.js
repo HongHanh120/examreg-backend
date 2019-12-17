@@ -1,4 +1,4 @@
-const roomModel = require('./models/rooms.model');
+const roomModel = require('./models/rooms.models');
 
 roomModel.getAllRoom()
     .then(console.log);

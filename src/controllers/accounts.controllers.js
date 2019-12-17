@@ -3,7 +3,7 @@ const config = require('config');
 const jwt = require('jsonwebtoken');
 const responseUtil = require('../utils/response.util');
 
-const account = require('../models/accounts.model');
+const account = require('../models/accounts.models');
 
 async function login(req, res) {
     const {

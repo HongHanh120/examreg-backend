@@ -2,8 +2,8 @@ const bcrypt = require('bcrypt');
 const config = require('config');
 const jwt = require('jsonwebtoken');
 const responseUtil = require('../utils/response.util');
-const subject = require('../models/subject.model');
-const account = require('../models/accounts.model');
+const subject = require('../models/subject.models');
+const account = require('../models/accounts.models');
 
 
 async function createSubject(req, res) {

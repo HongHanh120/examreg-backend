@@ -2,7 +2,7 @@ const db = require("../db");
 const responseUtil = require("../utils/response.util");
 const jwt = require('jsonwebtoken');
 const secretKey = require('config').get('SECRET_KEY');
-const accountmodel = require("../models/accounts.model")
+const accountmodel = require("../models/accounts.models")
 
 async function verify_isNotAdmin(req, res, next) {
     try {
