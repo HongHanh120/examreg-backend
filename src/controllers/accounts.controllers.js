@@ -43,8 +43,8 @@ async function register(req, res) {
         username,
         password,
         re_password,
-        date_of_birth,
         fullname,
+        date_of_birth,
         email
     } = req.body;
 
@@ -52,13 +52,13 @@ async function register(req, res) {
         if (username.length < 8)
             throw new Error('Username must greater than 8 characters');
         if (password.length < 8)
-            throw new Error('Password mush greater than 8 characters');
+            throw new Error('Password must greater than 8 characters');
         if (password !== re_password)
-            throw new Error('Your password and confirmation passwork do not match');
+            throw new Error('Your password and confirmation password do not match');
         if (!date_of_birth)
             throw new Error('Date of birth field is missing');
         if (!fullname)
-            throw new Error('Fullname field is missing');
+            throw new Error('Full name field is missing');
         if (!email)
             throw new Error('Email field is missing');
 
@@ -72,7 +72,50 @@ async function register(req, res) {
         let salt = await bcrypt.genSalt(10);
         let hashPassword = await bcrypt.hash(password, salt);
 
-        await account.createUser(username, hashPassword, date_of_birth, fullname, email);
+        await account.createUser(username, hashPassword, fullname, date_of_birth, '', email);
+
+        res.json(responseUtil.success({data: {}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function getStudentList(req, res) {
+    try{
+        const [rows] = await account.getAllStudent();
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}))
+    }
+}
+
+async function changePassword(req, res) {
+    const {
+        old_password,
+        new_password,
+        confirm_new_password
+    } = req.body;
+    const {id} = req.tokenData;
+    try {
+        if (!old_password)
+            throw new Error('Please enter your old password');
+        if (!new_password)
+            throw new Error('Please enter your new password');
+        if (new_password.length < 8)
+            throw new Error('Password must greater than 8 characters');
+        if (!confirm_new_password)
+            throw new Error('Please confirm new password');
+        if (new_password !== confirm_new_password)
+            throw new Error('Your password and confirmation password do not match');
+
+        let salt = await bcrypt.genSalt(10);
+        const [existedUser] = await account.getUserById(id);
+        const validatePassword = await bcrypt.compare(old_password, existedUser[0].password);
+        if (!validatePassword)
+            throw new Error('Your old password is wrong');
+
+        let hashPassword = await bcrypt.hash(new_password, salt);
+        await account.updatePassword(id, hashPassword);
 
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
@@ -82,5 +125,7 @@ async function register(req, res) {
 
 module.exports = {
     login,
-    register
+    register,
+    changePassword,
+    getStudentList
 };

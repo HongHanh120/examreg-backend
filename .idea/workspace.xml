@@ -2,21 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8829d2a2-2345-45ea-bd61-42958e080920" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/controllers/students.controllers.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/models/students.models.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/middlewares/multer.middlewares.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/routes/students.routes.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.express.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.express.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controllers/accounts.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/accounts.controllers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/middlewares/loginToken.middlewares.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/middlewares/tokens.middlewares.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/students.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/students.controllers.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/models/accounts.models.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/accounts.models.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/accounts.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/accounts.routes.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FavoritesManager">
+    <favorites_list name="ExamReg-backend" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -80,7 +84,11 @@
       <workItem from="1575808100424" duration="15745000" />
       <workItem from="1575861511313" duration="3234000" />
       <workItem from="1575866797260" duration="6265000" />
-      <workItem from="1575876899389" duration="2627000" />
+      <workItem from="1575876899389" duration="8579000" />
+      <workItem from="1575911315215" duration="5541000" />
+      <workItem from="1575947864489" duration="19697000" />
+      <workItem from="1576571916036" duration="1245000" />
+      <workItem from="1576636828523" duration="14305000" />
     </task>
     <servers />
   </component>
