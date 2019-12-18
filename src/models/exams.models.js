@@ -43,11 +43,22 @@ async function getAllExam() {
     return [rows];
 }
 
+async function getExambyKeyWord(keywords) {
+
+    const [rows] = await dbPool.query(`SELECT * 
+                                             FROM examinations
+                                             where MATCH(name)
+                                             AGAINST('+${keywords}*' IN boolean MODE)
+                                             limit 6`);
+    return [rows];
+}
+
 module.exports = {
     deleteExambyId,
     updateExam,
     createExam,
     getExambyName,
     getExambyid,
-    getAllExam
+    getAllExam,
+    getExambyKeyWord
 };

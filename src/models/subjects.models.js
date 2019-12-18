@@ -46,11 +46,22 @@ async function getAllSubjects() {
     return [rows];
 }
 
+async function getSubjectbyKeyWord(keywords) {
+
+    const [rows] = await dbPool.query(`SELECT * 
+                                             FROM subjects
+                                             where MATCH(name)
+                                             AGAINST('+${keywords}*' IN boolean MODE)
+                                             limit 6`);
+    return [rows];
+}
+
 module.exports = {
     deleteSubjectbyid,
     updateSubject,
     createSubject,
     getSubjectbycourse_code,
     getAllSubjects,
-    getSubjectbyid
+    getSubjectbyid,
+    getSubjectbyKeyWord
 };

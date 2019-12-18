@@ -48,11 +48,22 @@ async function getAllClass() {
     return [rows];
 }
 
+async function getClassbyKeyWord(keywords) {
+
+    const [rows] = await dbPool.query(`SELECT * 
+                                             FROM classes
+                                             where MATCH(name)
+                                             AGAINST('+${keywords}*' IN boolean MODE)
+                                             limit 6`);
+    return [rows];
+}
+
 module.exports = {
     deleteClassbyId,
     createClass,
     getClassbyClass_code,
     getClassbyid,
     getAllClass,
-    updateClass
+    updateClass,
+    getClassbyKeyWord
 };

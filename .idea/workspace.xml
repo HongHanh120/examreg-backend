@@ -4,10 +4,12 @@
     <list default="true" id="8829d2a2-2345-45ea-bd61-42958e080920" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controllers/classes.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/classes.controllers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/exams.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/exams.controllers.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controllers/subjects.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/subjects.controllers.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/models/classes.models.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/classes.models.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/exams.models.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/exams.models.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/models/subjects.models.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/subjects.models.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/classes.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/classes.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/exams.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/exams.routes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +103,8 @@
       <workItem from="1576366047009" duration="7519000" />
       <workItem from="1576433953465" duration="10105000" />
       <workItem from="1576599550479" duration="2412000" />
-      <workItem from="1576653958411" duration="11031000" />
+      <workItem from="1576653958411" duration="11957000" />
+      <workItem from="1576670799474" duration="575000" />
     </task>
     <task id="LOCAL-00001" summary="thang b1">
       <created>1576379160376</created>
@@ -145,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576667979473</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="update">
+      <created>1576669577713</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1576669577713</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -168,13 +178,14 @@
     <MESSAGE value="subject" />
     <MESSAGE value="thang b1" />
     <MESSAGE value="class" />
-    <option name="LAST_COMMIT_MESSAGE" value="class" />
+    <MESSAGE value="update" />
+    <option name="LAST_COMMIT_MESSAGE" value="update" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="924" y="347" key="CommitChangelistDialog2" timestamp="1576667979359">
+    <state x="924" y="347" key="CommitChangelistDialog2" timestamp="1576669577591">
       <screen x="0" y="23" width="2560" height="1337" />
     </state>
     <state x="693" y="210" key="CommitChangelistDialog2/0.23.1920.982@0.23.1920.982" timestamp="1576601068160" />
-    <state x="924" y="347" key="CommitChangelistDialog2/0.23.2560.1337@0.23.2560.1337" timestamp="1576667979359" />
+    <state x="924" y="347" key="CommitChangelistDialog2/0.23.2560.1337@0.23.2560.1337" timestamp="1576669577591" />
   </component>
 </project>

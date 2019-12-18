@@ -8,5 +8,6 @@ router.post("/create", tokencheck.verify, role.verify_isAdmin, subjectController
 router.delete("/delete", tokencheck.verify, role.verify_isAdmin, subjectController.deleteSubject);
 router.put("/update", tokencheck.verify, role.verify_isAdmin, subjectController.updateSubject);
 router.get("/", subjectController.getAllSubject);
+router.get("/search", subjectController.getSubjectbyKeyword);
 
 module.exports = router;

@@ -8,5 +8,5 @@ router.post("/create", tokencheck.verify, role.verify_isAdmin, ClassesController
 router.put("/update", tokencheck.verify, role.verify_isAdmin, ClassesController.updateClass);
 router.delete("/delete", tokencheck.verify, role.verify_isAdmin, ClassesController.deleteClasses);
 router.get("/", ClassesController.getAllClass);
-
+router.get("/", ClassesController.getClassbyKeyword);
 module.exports = router;

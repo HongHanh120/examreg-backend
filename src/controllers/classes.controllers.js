@@ -112,9 +112,29 @@ async function getAllClass(req, res) {
 
 }
 
+async function getClassbyKeyword(req, res) {
+    const {
+        keywords
+    } = req.query;
+
+    try {
+        if (!keywords)
+            throw new Error('keywords querry is missing');
+
+        [classes] = await subject.getClassbyKeyWord(keywords)
+        res.json(responseUtil.success({data: {classes: classes}}
+            )
+        );
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+
+}
+
 module.exports = {
     createClass,
     deleteClasses,
     getAllClass,
-    updateClass
+    updateClass,
+    getClassbyKeyword
 };

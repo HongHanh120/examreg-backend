@@ -8,5 +8,5 @@ router.post("/create", tokencheck.verify, role.verify_isSuperAdmin, ExamControll
 router.put("/update", tokencheck.verify, role.verify_isSuperAdmin, ExamController.updateExam);
 router.delete("/delete", tokencheck.verify, role.verify_isSuperAdmin, ExamController.deleteExams);
 router.get("/", ExamController.getAllExam);
-
+router.get("/search", ExamController.getExambyKeyword);
 module.exports = router;

@@ -97,10 +97,30 @@ async function getAllSubject(req, res) {
 
 }
 
+async function getSubjectbyKeyword(req, res) {
+    const {
+        keywords
+    } = req.query;
+
+    try {
+        if (!keywords)
+            throw new Error('keywords querry is missing');
+
+        [subjects] = await subject.getSubjectbyKeyWord(keywords)
+        res.json(responseUtil.success({data: {subjects: subjects}}
+            )
+        );
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+
+}
+
 module.exports = {
     createSubject,
     updateSubject,
     deleteSubject,
-    getAllSubject
+    getAllSubject,
+    getSubjectbyKeyword
 
 };

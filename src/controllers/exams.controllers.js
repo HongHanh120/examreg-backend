@@ -88,9 +88,28 @@ async function getAllExam(req, res) {
 
 }
 
+async function getExambyKeyword(req, res) {
+    const {
+        keywords
+    } = req.query;
+
+    try {
+        if (!keywords)
+            throw new Error('keywords querry is missing');
+
+        [exams] = await exam_model.getExambyKeyWord(keywords)
+        res.json(responseUtil.success({data: {exams: [exams]}}
+            )
+        );
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+
+}
 module.exports = {
     createExam,
     updateExam,
     deleteExams,
-    getAllExam
+    getAllExam,
+    getExambyKeyword
 };
