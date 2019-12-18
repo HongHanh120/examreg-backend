@@ -3,7 +3,7 @@ const config = require('config');
 const jwt = require('jsonwebtoken');
 const responseUtil = require('../utils/response.util');
 
-const account = require('./database/accounts.database');
+const account = require('../models/accounts.models');
 
 async function login(req, res) {
     const {
@@ -47,7 +47,8 @@ async function register(req, res) {
         fullname,
         email
     } = req.body;
-
+    console.log(req.body.username);
+    const [a] = await account.getUserByUsername("hanh2001");
     try {
         if (username.length < 8)
             throw new Error('Username must greater than 8 characters');

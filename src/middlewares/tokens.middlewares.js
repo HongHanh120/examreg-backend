@@ -4,9 +4,9 @@ const secretKey = require('config').get('SECRET_KEY');
 function verify(req, res, next) {
     const token = req.headers['token'];
 
-    if(token) {
+    if (token) {
         jwt.verify(token, secretKey, (err, decoded) => {
-            if(err) {
+            if (err) {
                 return res.json({
                     success: false,
                     status: 101,
