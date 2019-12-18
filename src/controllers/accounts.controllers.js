@@ -47,7 +47,8 @@ async function register(req, res) {
         date_of_birth,
         email
     } = req.body;
-
+    console.log(req.body.username);
+    const [a] = await account.getUserByUsername("hanh2001");
     try {
         if (username.length < 8)
             throw new Error('Username must greater than 8 characters');

@@ -5,6 +5,9 @@ const config = require('config');
 
 const accountsRoute = require('./routes/accounts.routes');
 const studentsRoute = require('./routes/students.routes');
+const subjectsRoute = require("./routes/subjects.routes");
+const examsRoute= require("./routes/exams.routes");
+const classesRoute= require("./routes/classes.routes");
 
 const appExpress = express();
 
@@ -14,6 +17,9 @@ appExpress.use(morgan('combined'));
 
 appExpress.use('/api/v1/accounts/', accountsRoute);
 appExpress.use('/api/v1/students/', studentsRoute);
+appExpress.use("/api/v1/subjects/", subjectsRoute);
+appExpress.use("/api/v1/exams/", examsRoute);
+appExpress.use("/api/v1/classes/", classesRoute);
 
 appExpress.use('api/v1', (req, res) => {
     res.send('examreg-backend');

@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="8829d2a2-2345-45ea-bd61-42958e080920" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+=======
+    <list default="true" id="8829d2a2-2345-45ea-bd61-42958e080920" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/classes.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/classes.controllers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/exams.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/exams.controllers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/controllers/subjects.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/controllers/subjects.controllers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/classes.models.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/classes.models.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/exams.models.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/exams.models.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/models/subjects.models.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/models/subjects.models.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/exams.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/exams.routes.js" afterDir="false" />
+    </list>
+>>>>>>> 37742b12092da8056aaa36ed07ebaeaad149cfd5
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,20 +25,46 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1UZTWqmkPetVCAPdEHGw3ES0UWe" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
+<<<<<<< HEAD
+=======
+    <property name="javascript.nodejs.core.library.configured.version" value="12.13.1" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/routes" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+>>>>>>> 37742b12092da8056aaa36ed07ebaeaad149cfd5
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/routes" />
+      <recent name="$PROJECT_DIR$/src/models" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/controllers" />
+      <recent name="$PROJECT_DIR$/src/middlewares" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/models/database" />
+      <recent name="$PROJECT_DIR$/src/models" />
+    </key>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -40,8 +79,73 @@
       <option name="presentableId" value="Default" />
       <updated>1575563151832</updated>
       <workItem from="1575563155652" duration="39000" />
+<<<<<<< HEAD
       <workItem from="1576686503538" duration="119000" />
+=======
+      <workItem from="1575796145014" duration="6380000" />
+      <workItem from="1575808100424" duration="15745000" />
+      <workItem from="1575861511313" duration="3234000" />
+      <workItem from="1575866797260" duration="6265000" />
+      <workItem from="1575876899389" duration="2627000" />
+      <workItem from="1576356721373" duration="338000" />
+      <workItem from="1576357137561" duration="391000" />
+      <workItem from="1576366047009" duration="7519000" />
+      <workItem from="1576433953465" duration="10105000" />
+      <workItem from="1576599550479" duration="2412000" />
+      <workItem from="1576653958411" duration="11957000" />
+      <workItem from="1576670799474" duration="575000" />
     </task>
+    <task id="LOCAL-00001" summary="thang b1">
+      <created>1576379160376</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1576379160376</updated>
+    </task>
+    <task id="LOCAL-00002" summary="subject">
+      <created>1576461987172</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1576461987172</updated>
+    </task>
+    <task id="LOCAL-00003" summary="thang b1">
+      <created>1576600865503</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1576600865503</updated>
+    </task>
+    <task id="LOCAL-00004" summary="thang b1">
+      <created>1576601068523</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1576601068524</updated>
+>>>>>>> 37742b12092da8056aaa36ed07ebaeaad149cfd5
+    </task>
+    <task id="LOCAL-00005" summary="thang b1">
+      <created>1576666058644</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1576666058644</updated>
+    </task>
+    <task id="LOCAL-00006" summary="class">
+      <created>1576667979473</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1576667979473</updated>
+    </task>
+    <task id="LOCAL-00007" summary="update">
+      <created>1576669577713</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1576669577713</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -59,5 +163,19 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="subject" />
+    <MESSAGE value="thang b1" />
+    <MESSAGE value="class" />
+    <MESSAGE value="update" />
+    <option name="LAST_COMMIT_MESSAGE" value="update" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="924" y="347" key="CommitChangelistDialog2" timestamp="1576669577591">
+      <screen x="0" y="23" width="2560" height="1337" />
+    </state>
+    <state x="693" y="210" key="CommitChangelistDialog2/0.23.1920.982@0.23.1920.982" timestamp="1576601068160" />
+    <state x="924" y="347" key="CommitChangelistDialog2/0.23.2560.1337@0.23.2560.1337" timestamp="1576669577591" />
   </component>
 </project>
