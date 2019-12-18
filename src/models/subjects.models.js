@@ -8,12 +8,14 @@ async function deleteSubjectbyid(id) {
                             id="${id}"`);
 }
 
-async function updateSubject(name, course_code, credit) {
+async function updateSubject(id, name, course_code, credit) {
     await dbPool.query(`UPDATE subjects 
                             SET 
-                            name="${name}"
+                            name="${name}",
+                            course_code="${course_code}",
+                            credit="${credit}"
                             WHERE 
-                            course_code = "${course_code}"
+                            id = "${id}"
                             `);
 }
 
@@ -30,6 +32,13 @@ async function getSubjectbycourse_code(course_code) {
     return [rows];
 }
 
+async function getSubjectbyid(id) {
+    const [rows] = await dbPool.query(`SELECT * 
+                                         FROM subjects
+                                         WHERE id = "${id}"`);
+    return [rows];
+}
+
 async function getAllSubjects() {
     const [rows] = await dbPool.query(`SELECT * 
                                          FROM subjects
@@ -42,5 +51,6 @@ module.exports = {
     updateSubject,
     createSubject,
     getSubjectbycourse_code,
-    getAllSubjects
+    getAllSubjects,
+    getSubjectbyid
 };

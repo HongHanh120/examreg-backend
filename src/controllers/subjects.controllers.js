@@ -40,7 +40,7 @@ async function deleteSubject(req, res) {
 
     console.log('dsd');
     try {
-        if (!id)  throw new Error('id field is missing');
+        if (!id) throw new Error('id field is missing');
         id.forEach(element => deleteSubjectbyId(element));
 
         res.json(responseUtil.success({data: {}}));
@@ -49,12 +49,14 @@ async function deleteSubject(req, res) {
     }
 
 };
+
 async function deleteSubjectbyId(id) {
     await subject.deleteSubjectbyid(id);
 };
 
 async function updateSubject(req, res) {
     const {
+        id,
         name,
         course_code,
         credit
@@ -67,12 +69,14 @@ async function updateSubject(req, res) {
             throw new Error('name field is missing');
         if (!credit)
             throw new Error('credit field is missing');
-
-        const [existedSubject] = await subject.getSubjectbycourse_code(course_code);
+        if (!id)
+            throw new Error('id field is missing');
+        const [existedSubject] = await subject.getSubjectbyid(id);
         if (!existedSubject.length)
             throw new Error('have not created');
 
-        await subject.updateSubject(name, course_code, credit)
+        await subject.updateSubject(id, name, course_code, credit)
+
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));

@@ -5,7 +5,7 @@ const tokencheck = require("../middlewares/tokens.middlewares");
 const role = require("../middlewares/roles.middlewares");
 
 router.post("/create", tokencheck.verify, role.verify_isAdmin, ClassesController.createClass);
-// router.put("/update", tokencheck.verify, role.verify_isAdmin, ClassesController.updateExam);
+router.put("/update", tokencheck.verify, role.verify_isAdmin, ClassesController.updateClass);
 router.delete("/delete", tokencheck.verify, role.verify_isAdmin, ClassesController.deleteClasses);
 router.get("/", ClassesController.getAllClass);
 

@@ -8,14 +8,16 @@ async function deleteClassbyId(id) {
                             id="${id}"`);
 }
 
-// async function updateExam(id, name) {
-//     await dbPool.query(`UPDATE classes
-//                             SET
-//                             name="${name}"
-//                             WHERE
-//                             id = "${id}"
-//                             `);
-// }
+async function updateClass(id, class_code, examination_id, subject_id) {
+    await dbPool.query(`UPDATE classes
+                            SET
+                            class_code="${class_code}",
+                            examination_id="${examination_id}",
+                            subject_id="${subject_id}"
+                            WHERE
+                            id = "${id}"
+                            `);
+}
 
 async function createClass(class_code, examination_id, subject_id) {
     console.log(`INSERT INTO classes ( class_code, examination_id, subject_id) 
@@ -51,5 +53,6 @@ module.exports = {
     createClass,
     getClassbyClass_code,
     getClassbyid,
-    getAllClass
+    getAllClass,
+    updateClass
 };
