@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const secretKey = require('config').get('SECRET_KEY');
 const accountmodel = require("../models/accounts.models")
 
-async function verify_isNotAdmin(req, res, next) {
+async function verify_isAdmin(req, res, next) {
     try {
         const {username} = req.tokenData
         if (!username) throw new Error("username missing affter verify token");
@@ -20,8 +20,25 @@ async function verify_isNotAdmin(req, res, next) {
         res.json(responseUtil.fail({reason: err.message}))
     }
 }
+async function verify_isSuperAdmin(req, res, next) {
+    try {
+        const {username} = req.tokenData
+        if (!username) throw new Error("username missing affter verify token");
+        const [user_row] = await accountmodel.getUserByUsername(username);
+        const user_role = user_row[0].role_id
+        if (user_role !== 3)  //===3 is sup admin
+        {
+            throw new Error("you are not Super Admin you haven't privilege to use this function");
+        }
+        next();
+
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}))
+    }
+}
 
 
 module.exports = {
-    verify_isNotAdmin
+    verify_isAdmin,
+    verify_isSuperAdmin
 };
