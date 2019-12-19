@@ -1,5 +1,5 @@
-const dbPool = require('../db');
-const config = require('config');
+const dbPool = require("../db");
+const config = require("config");
 
 async function getUserById(id) {
     const [rows] = await dbPool.query(`SELECT * 
@@ -37,7 +37,13 @@ async function getAllStudent() {
     const [rows] = await dbPool.query(`SELECT username, fullname, date_of_birth, course_class, email
                                         FROM accounts
                                         WHERE role_id = 2`);
-    return [rows]
+    return [rows];
+}
+async function getAllAdmin() {
+    const [rows] = await dbPool.query(`SELECT username, fullname, date_of_birth, course_class, email, role_id
+                                        FROM accounts
+                                        WHERE role_id = 1 OR role_id = 3`);
+    return [rows];
 }
 
 module.exports = {
@@ -46,7 +52,8 @@ module.exports = {
     getUserByEmail,
     createUser,
     updatePassword,
-    getAllStudent
+    getAllStudent,
+    getAllAdmin,
 };
 
 

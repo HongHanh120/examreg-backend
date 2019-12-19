@@ -6,5 +6,6 @@
     "PASSWORD": "2CGm{7f9d{!\"WYmQ",
     "NAME": "examreg"
   },
-  "SECRET_KEY": "pum9BT+Eu6{U-,1"
+  "SECRET_KEY": "pum9BT+Eu6{U-,1",
+  "EXAMINATION_SECRET_KEY": "Ze1lb5qbFlEtRMsq"
 }

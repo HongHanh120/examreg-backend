@@ -1,5 +1,5 @@
-const dbPool = require('../db');
-const config = require('config');
+const dbPool = require("../db");
+const config = require("config");
 
 async function deleteSubjectbyid(id) {
     await dbPool.query(`DELETE
@@ -32,10 +32,10 @@ async function getSubjectbycourse_code(course_code) {
     return [rows];
 }
 
-async function getSubjectbyid(id) {
+async function getSubjectById(id) {
     const [rows] = await dbPool.query(`SELECT * 
                                          FROM subjects
-                                         WHERE id = "${id}"`);
+                                         WHERE id = ${id}`);
     return [rows];
 }
 
@@ -57,11 +57,11 @@ async function getSubjectbyKeyWord(keywords) {
 }
 
 module.exports = {
-    deleteSubjectbyid,
-    updateSubject,
-    createSubject,
-    getSubjectbycourse_code,
-    getAllSubjects,
-    getSubjectbyid,
-    getSubjectbyKeyWord
+    // deleteSubjectbyid,
+    // updateSubject,
+    // createSubject,
+    // getSubjectbycourse_code,
+    // getAllSubjects,
+    getSubjectById,
+    // getSubjectbyKeyWord
 };

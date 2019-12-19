@@ -5,6 +5,6 @@ const multerMiddleware = require("../middlewares/multer.middlewares");
 
 const studentController = require("../controllers/students.controllers");
 
-router.post("/import", multerMiddleware.upload.single('students'), studentController.importStudents);
+router.post("/", multerMiddleware.upload.single("students"), studentController.importStudents);
 
 module.exports = router;

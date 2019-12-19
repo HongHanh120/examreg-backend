@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require("mysql2");
 const config = require("config");
 
 const database = config.get("DATABASE");
@@ -11,7 +11,7 @@ let dbPool = mysql.createPool({
     password: PASSWORD,
     waitForConnections: true,
     connectionLimit: 100,
-    queueLimit: 0,
+    queueLimit: 0
 });
 
 dbPool = dbPool.promise();

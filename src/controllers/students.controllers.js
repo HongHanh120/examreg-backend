@@ -1,24 +1,25 @@
-const responseUtil = require('../utils/response.util');
-const excelToJson = require('convert-excel-to-json');
-const brcypt = require('bcrypt');
-const fs = require('fs');
+const responseUtil = require("../utils/response.util");
+const excelToJson = require("convert-excel-to-json");
+const brcypt = require("bcrypt");
+const fs = require("fs");
 
-const account = require('../models/accounts.models');
+const account = require("../models/accounts.models");
 
 async function importStudents(req, res) {
     const file = req.file;
+    console.log(file);
     try {
         if (!file)
-            throw new Error('Please upload a file');
+            throw new Error("Please upload a file");
         const filePath = req.file.path;
         const studentsSheet = excelToJson({
             sourceFile: filePath,
             columnToKey: {
-                B: 'MSSV',
-                C: 'fullname',
-                D: 'course_class',
-                E: 'date_of_birth',
-                F: 'email'
+                B: "MSSV",
+                C: "fullname",
+                D: "course_class",
+                E: "date_of_birth",
+                F: "email"
             }
         });
         const firstSheet = Object.keys(studentsSheet)[0];
@@ -27,25 +28,22 @@ async function importStudents(req, res) {
             let date = new Date(student.date_of_birth);
             student.date_of_birth = date.getTime() / 1000;
         });
+
         let existedStudents = [];
-        console.log(existedStudents);
         for (let student of students) {
-            // console.log(student);
             const [existedStudent] = await account.getUserByUsername(student.MSSV);
-            console.log(existedStudent);
             if (existedStudent.length)
                 existedStudents.push({MSSV: student.MSSV});
+            else {
+                let salt = await brcypt.genSalt(10);
+                let {MSSV, fullname, course_class, date_of_birth, email} = student;
+                let hashPassword = await brcypt.hash(MSSV.toString(), salt);
+                await account.createUser(MSSV, hashPassword, fullname, date_of_birth, course_class, email);
+            }
         }
-        console.log(existedStudents.length);
         if (existedStudents.length)
-            throw new Error('Student is existed: ' + JSON.stringify(existedStudents));
+            throw new Error("Student is existed: " + JSON.stringify(existedStudents));
 
-        for (let student of students) {
-            let salt = await brcypt.genSalt(10);
-            let {MSSV, fullname, course_class, date_of_birth, email} = student;
-            let hashPassword = await brcypt.hash(MSSV.toString(), salt);
-            await account.createUser(MSSV, hashPassword, fullname, date_of_birth, course_class, email);
-        }
         fs.unlinkSync(filePath);
         res.json(responseUtil.success({data: {}}));
     } catch (err) {

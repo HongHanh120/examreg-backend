@@ -1,5 +1,4 @@
-const dbPool = require('../db');
-const config = require('config');
+const dbPool = require("../db");
 
 async function deleteClassbyId(id) {
     await dbPool.query(`DELETE
@@ -8,43 +7,44 @@ async function deleteClassbyId(id) {
                             id="${id}"`);
 }
 
-async function updateClass(id, class_code, examination_id, subject_id) {
+async function updateClass(id, class_code, subject_id) {
     await dbPool.query(`UPDATE classes
-                            SET
-                            class_code="${class_code}",
-                            examination_id="${examination_id}",
-                            subject_id="${subject_id}"
-                            WHERE
-                            id = "${id}"
-                            `);
+                        SET class_code = "${class_code}",
+                            subject_id = ${subject_id}
+                        WHERE id = ${id}`);
 }
 
 async function createClass(class_code, examination_id, subject_id) {
-    console.log(`INSERT INTO classes ( class_code, examination_id, subject_id) 
-                            VALUES ( "${class_code}", "${examination_id}", "${subject_id}");`);
     await dbPool.query(`INSERT INTO classes ( class_code, examination_id, subject_id) 
-                            VALUES ( "${class_code}", "${examination_id}", "${subject_id}");`);
+                            VALUES ( "${class_code}", ${examination_id}, ${subject_id});`);
 
 }
 
-async function getClassbyClass_code(class_code) {
-    const [rows] = await dbPool.query(`SELECT * 
-                                         FROM classes
-                                         WHERE class_code = "${class_code}"`);
+async function verifyExistedClass(class_code, examination_id, subject_id) {
+    const [rows] = await dbPool.query(`SELECT * FROM classes
+                                            WHERE class_code = ${class_code}
+                                            AND examination_id = ${examination_id}
+                                            AND subject_id = ${subject_id}`);
     return [rows];
 }
 
-async function getClassbyid(id) {
+// async function getClassByClassCode(class_code, examination_id) {
+//     const [rows] = await dbPool.query(`SELECT *
+//                                          FROM classes
+//                                          WHERE class_code = "${class_code}" AND examination_id = ${examination_id}`);
+//     return [rows];
+// }
+
+async function getClassById(id, examination_id) {
     const [rows] = await dbPool.query(`SELECT * 
                                          FROM classes
-                                         WHERE id = "${id}"`);
+                                         WHERE id = ${id} AND examination_id = ${examination_id}`);
     return [rows];
 }
 
-async function getAllClass() {
-    const [rows] = await dbPool.query(`SELECT * 
-                                         FROM classes
-                                         `);
+async function getAllClass(examination_id) {
+    const [rows] = await dbPool.query(`SELECT * FROM classes
+                                        WHERE examination_id = ${examination_id}`);
     return [rows];
 }
 
@@ -52,18 +52,19 @@ async function getClassbyKeyWord(keywords) {
 
     const [rows] = await dbPool.query(`SELECT * 
                                              FROM classes
-                                             where MATCH(name)
+                                             WHERE MATCH(name)
                                              AGAINST('+${keywords}*' IN boolean MODE)
-                                             limit 6`);
+                                             LIMIT 10`);
     return [rows];
 }
 
 module.exports = {
-    deleteClassbyId,
+    // deleteClassbyId,
     createClass,
-    getClassbyClass_code,
-    getClassbyid,
+    // getClassByClassCode,
+    getClassById,
     getAllClass,
     updateClass,
-    getClassbyKeyWord
+    verifyExistedClass,
+    // getClassbyKeyWord
 };

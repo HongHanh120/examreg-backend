@@ -1,5 +1,5 @@
-const dbPool = require('../db');
-const config = require('config');
+const dbPool = require("../db");
+const config = require("config");
 
 
 async function getAdminRole(account_id) {
