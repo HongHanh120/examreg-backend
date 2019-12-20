@@ -69,7 +69,22 @@ async function createClass(req, res) {
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
+}
 
+async function getInformation(req, res) {
+    const {id} = req.body;
+    try {
+        if(!id)
+            throw new Error("Id field is missing");
+        const [existedClass] = await classModel.getClassById(id);
+        if(!existedClass.length)
+            throw new Error("This class is not existed");
+        let [rows] = await classModel.getClassById(id);
+        rows = rows[0];
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
 }
 
 async function getAllClass(req, res) {
@@ -172,5 +187,6 @@ module.exports = {
     deleteClasses,
     getAllClass,
     updateClass,
-    getClassByKeyword
+    getClassByKeyword,
+    getInformation
 };
