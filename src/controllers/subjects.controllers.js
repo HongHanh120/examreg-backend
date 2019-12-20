@@ -1,126 +1,149 @@
-const bcrypt = require("bcrypt");
-const config = require("config");
-const jwt = require("jsonwebtoken");
 const responseUtil = require("../utils/response.util");
 const subject = require("../models/subjects.models");
-
 
 async function createSubject(req, res) {
     const {
         name,
-        course_code,
+        subject_code,
         credit
     } = req.body;
     try {
-        if (!course_code)
-            throw new Error("course_code field is missing");
+        if (!subject_code)
+            throw new Error("Subject_code field is missing");
         if (!name)
-            throw new Error("name field is missing");
+            throw new Error("Name field is missing");
         if (!credit)
-            throw new Error("credit field is missing");
+            throw new Error("Credit field is missing");
 
-        const [existedSubject] = await subject.getSubjectbycourse_code(course_code);
+        const [existedSubject] = await subject.getSubjectByCourseCode(subject_code);
         if (existedSubject.length)
-            throw new Error("coursecode is existed");
+            throw new Error("Course code is existed");
 
-
-        await subject.createSubject(name, course_code, credit);
+        await subject.createSubject(name, subject_code, credit);
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
-
-};
-
+}
 
 async function deleteSubject(req, res) {
-    const {
-        id
-    } = req.body;
-
-    console.log("dsd");
+    const {id} = req.body;
     try {
-        if (!id) throw new Error("id field is missing");
-        id.forEach(element => deleteSubjectbyId(element));
+        if (!id)
+            throw new Error("Id field is missing");
+        const [existedSubject] = await subject.getSubjectById(id);
+        if (!existedSubject.length)
+            throw new Error("This subject is not existed");
+        await subject.deleteSubjectById(id);
+        res.json(responseUtil.success({data: {}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function deleteSubjects(req, res) {
+    const {id} = req.body;
+    try {
+        if (!id)
+            throw new Error("Id field is missing");
+        let existedSubjects = [];
+        let notExistedSubjects = [];
+        for(let i = 0; i < id.length; i++){
+            const [existedSubject] = await subject.getSubjectById(id[i]);
+            if(existedSubject.length)
+                existedSubjects.push(id[i]);
+            else
+                notExistedSubjects.push(id[i]);
+        }
+        for(let i = 0; i <existedSubjects.length; i++){
+            await subject.deleteSubjectById(existedSubjects[i]);
+        }
+        if (notExistedSubjects.length)
+            throw new Error("These subjects is not existed:" + JSON.stringify(notExistedSubjects));
 
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
-
-};
-
-async function deleteSubjectbyId(id) {
-    await subject.deleteSubjectbyid(id);
 };
 
 async function updateSubject(req, res) {
     const {
         id,
         name,
-        course_code,
+        subject_code,
         credit
     } = req.body;
-
     try {
-        if (!course_code)
-            throw new Error("course_code field is missing");
+        if (!subject_code)
+            throw new Error("Subject code field is missing");
         if (!name)
-            throw new Error("name field is missing");
+            throw new Error("Name field is missing");
         if (!credit)
-            throw new Error("credit field is missing");
+            throw new Error("Credit field is missing");
         if (!id)
-            throw new Error("id field is missing");
-        const [existedSubject] = await subject.getSubjectbyid(id);
-        if (!existedSubject.length)
-            throw new Error("have not created");
+            throw new Error("Id field is missing");
 
-        await subject.updateSubject(id, name, course_code, credit);
+        const [existedSubject] = await subject.getSubjectById(id);
+        if (!existedSubject.length)
+            throw new Error("This subject is not existed");
+
+        const [duplication] = await subject.getSubjectByCourseCode(subject_code);
+        if (duplication.length)
+            throw new Error("This subject is existed");
+
+        await subject.updateSubject(id, name, subject_code, credit);
 
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
-
 }
 
 async function getAllSubject(req, res) {
-
     try {
         [subjects] = await subject.getAllSubjects();
-        res.json(responseUtil.success({data: {subjects: subjects}}
-            )
-        );
+        res.json(responseUtil.success({data: {subjects: subjects}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
-
 }
 
-async function getSubjectbyKeyword(req, res) {
-    const {
-        keywords
-    } = req.query;
-
+async function getSubjectByKeyword(req, res) {
+    const {keywords} = req.query;
     try {
         if (!keywords)
-            throw new Error("keywords querry is missing");
+            throw new Error("Keywords is missing");
 
-        [subjects] = await subject.getSubjectbyKeyWord(keywords);
-        res.json(responseUtil.success({data: {subjects: subjects}}
-            )
-        );
+        [subjects] = await subject.getSubjectByKeyword(keywords);
+        res.json(responseUtil.success({data: {subjects: subjects}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
+}
 
+async function getInformation(req, res){
+    const {id} = req.query;
+    try {
+        if(!id)
+            throw new Error("Id field is missing");
+        const [existedSubject] = await subject.getSubjectById(id);
+        if(!existedSubject.length)
+            throw new Error("This subject is not existed");
+        let [rows] = await subject.getSubjectById(id);
+        rows = rows[0];
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
 }
 
 module.exports = {
     createSubject,
     updateSubject,
     deleteSubject,
+    deleteSubjects,
     getAllSubject,
-    getSubjectbyKeyword
-
+    getSubjectByKeyword,
+    getInformation
 };

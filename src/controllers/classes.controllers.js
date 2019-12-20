@@ -7,9 +7,7 @@ const subjectModel = require("../models/subjects.models");
 
 async function importClasses(req, res) {
     const {examination_id} = req.tokenData;
-    console.log(examination_id);
     const file = req.file;
-    console.log(file);
     try {
         if (!file)
             throw new Error("Please upload a file");
@@ -72,7 +70,7 @@ async function createClass(req, res) {
 }
 
 async function getInformation(req, res) {
-    const {id} = req.body;
+    const {id} = req.query;
     try {
         if(!id)
             throw new Error("Id field is missing");
@@ -130,7 +128,8 @@ async function updateClass(req, res) {
 async function deleteClasses(req, res) {
     const {id} = req.body;
     try {
-        if (!id) throw new Error("Id field is missing");
+        if (!id)
+            throw new Error("Id field is missing");
         let existedClasses = [];
         let notExistedClasses = [];
         for (let i = 0; i < id.length; i++) {
@@ -168,7 +167,7 @@ async function deleteClass(req, res) {
 };
 
 async function getClassByKeyword(req, res) {
-    const {keywords} = req.params;
+    const {keywords} = req.query;
     try {
         if (!keywords)
             throw new Error("Keywords is missing");

@@ -50,6 +50,10 @@ async function importStudents(req, res) {
     }
 }
 
+async function getInformation(req, res) {
+
+}
+
 module.exports = {
     importStudents
 };
