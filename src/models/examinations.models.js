@@ -28,11 +28,11 @@ async function getAllExaminations() {
 
 async function updateExamination(id, name) {
     await dbPool.query(`UPDATE examinations 
-                        SET name="${name}"
+                        SET name ="${name}"
                         WHERE id = ${id}`);
 }
 
-async function getExaminationByKeyWord(keywords) {
+async function getExaminationByKeyword(keywords) {
     const [rows] = await dbPool.query(`SELECT * 
                                        FROM examinations
                                        WHERE MATCH(name)
@@ -53,5 +53,5 @@ module.exports = {
     getAllExaminations,
     updateExamination,
     deleteExaminationById,
-    getExaminationByKeyWord
+    getExaminationByKeyword
 };
