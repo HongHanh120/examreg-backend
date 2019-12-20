@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const ExamController = require("../controllers/exams.controllers");
-const tokencheck = require("../middlewares/tokenLogin.middlewares");
-const role = require("../middlewares/role.middlewares");
+const examinationController = require("../controllers/examinations.controllers");
+const token = require("../middlewares/tokenLogin.middlewares");
+const privilege = require("../middlewares/privilege.middlewares");
 
-router.post("/create", tokencheck.verify, role.verify_isSuperAdmin, ExamController.createExam);
-router.put("/update", tokencheck.verify, role.verify_isSuperAdmin, ExamController.updateExam);
-router.delete("/delete", tokencheck.verify, role.verify_isSuperAdmin, ExamController.deleteExams);
-router.get("/", ExamController.getAllExam);
-router.get("/search", ExamController.getExambyKeyword);
+router.post("/", token.verify, privilege.verify(9), examinationController.createExamination);
+router.put("/", token.verify, privilege.verify(10), examinationController.updateExamination);
+router.delete("/", token.verify, privilege.verify(11), examinationController.deleteExamination);
+router.get("/", token.verify, privilege.verify(10), examinationController.getAllExaminations);
+router.get("/search", token.verify, examinationController.getExaminationByKeyword);
+
 module.exports = router;
