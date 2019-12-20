@@ -102,7 +102,7 @@ async function updateClass(req, res) {
         const [existedSubject] = await subjectModel.getSubjectById(subject_id);//kiem tra subject co ton tai k
         if (!existedSubject.length)
             throw new Error("This subject is not existed");
-        const [existedClass] = await classModel.getClassById(id, examination_id);
+        const [existedClass] = await classModel.getClassById(id);
         if (!existedClass.length)
             throw new Error("This class is not existed in this examination");
 
@@ -116,15 +116,22 @@ async function updateClass(req, res) {
 
 async function deleteClasses(req, res) {
     const {id} = req.body;
-    console.log(id);
-    console.log(id.length);
     try {
         if (!id) throw new Error("Id field is missing");
+        let existedClasses = [];
+        let notExistedClasses = [];
         for (let i = 0; i < id.length; i++) {
-            console.log(classModel.deleteClassById(i));
-            await classModel.deleteClassById(i);
+            const [existedClass] = await classModel.getClassById(id[i]);
+            if (existedClass.length)
+                existedClasses.push(id[i]);
+            else
+                notExistedClasses.push(id[i]);
         }
-
+        for (let i = 0; i < existedClasses.length; i++) {
+            await classModel.deleteClassById(existedClasses[i]);
+        }
+        if(notExistedClasses.length)
+            throw new Error("These classes is not existed: " + JSON.stringify(notExistedClasses));
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -135,6 +142,10 @@ async function deleteClass(req, res) {
     const {id} = req.body;
     try {
         if (!id) throw new Error("Id field is missing");
+
+        const [existedClass] = await classModel.getClassById(id);
+        if (!existedClass.length)
+            throw new Error("This class is not existed in this examination");
         await classModel.deleteClassById(id);
 
         res.json(responseUtil.success({data: {}}));

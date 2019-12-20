@@ -14,10 +14,10 @@ async function verifyExistedClass(class_code, examination_id, subject_id) {
     return [rows];
 }
 
-async function getClassById(id, examination_id) {
+async function getClassById(id) {
     const [rows] = await dbPool.query(`SELECT * 
                                          FROM classes
-                                         WHERE id = ${id} AND examination_id = ${examination_id}`);
+                                         WHERE id = ${id}`);
     return [rows];
 }
 
