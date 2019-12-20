@@ -3,7 +3,6 @@ const excelToJson = require("convert-excel-to-json");
 const fs = require("fs");
 
 const classModel = require("../models/classes.models");
-const examModel = require("../models/examinations.models");
 const subjectModel = require("../models/subjects.models");
 
 async function importClasses(req, res) {
@@ -84,7 +83,6 @@ async function getAllClass(req, res) {
 }
 
 async function updateClass(req, res) {
-    const {examination_id} = req.tokenData;
     const {
         id,
         class_code,
@@ -154,26 +152,18 @@ async function deleteClass(req, res) {
     }
 };
 
+async function getClassByKeyword(req, res) {
+    const {keywords} = req.params;
+    try {
+        if (!keywords)
+            throw new Error("Keywords is missing");
 
-//
-// async function getClassbyKeyword(req, res) {
-//     const {
-//         keywords
-//     } = req.query;
-//
-//     try {
-//         if (!keywords)
-//             throw new Error("keywords querry is missing");
-//
-//         [classes] = await subject.getClassbyKeyWord(keywords);
-//         res.json(responseUtil.success({data: {classes: classes}}
-//             )
-//         );
-//     } catch (err) {
-//         res.json(responseUtil.fail({reason: err.message}));
-//     }
-//
-// }
+        [classes] = await classModel.getClassByKeyWord(keywords);
+        res.json(responseUtil.success({data: {classes: classes}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
 
 module.exports = {
     importClasses,
@@ -181,6 +171,6 @@ module.exports = {
     deleteClass,
     deleteClasses,
     getAllClass,
-    updateClass
-    // getClassByKeyword
+    updateClass,
+    getClassByKeyword
 };

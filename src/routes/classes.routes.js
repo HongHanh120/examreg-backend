@@ -12,5 +12,5 @@ router.put("/update", examinationToken.verify, privilege.verify(6), classControl
 router.delete("/", examinationToken.verify, privilege.verify(7), classController.deleteClass);
 router.delete("/classes", examinationToken.verify, privilege.verify(7),classController.deleteClasses);
 router.get("/", examinationToken.verify, privilege.verify(8), classController.getAllClass);
-// router.get("/", ClassesController.getClassByKeyword);
+router.get("/search/:keywords", token.verify, classController.getClassByKeyword);
 module.exports = router;

@@ -39,15 +39,15 @@ async function updateClass(id, class_code, subject_id) {
                         WHERE id = ${id}`);
 }
 
-// async function getClassbyKeyWord(keywords) {
-//
-//     const [rows] = await dbPool.query(`SELECT *
-//                                              FROM classes
-//                                              WHERE MATCH(name)
-//                                              AGAINST('+${keywords}*' IN boolean MODE)
-//                                              LIMIT 10`);
-//     return [rows];
-// }
+async function getClassByKeyWord(keywords) {
+    const [rows] = await dbPool.query(`SELECT subjects.name, subjects.subject_code, classes.class_code, classes.examination_id
+                                       FROM classes
+                                       INNER JOIN subjects ON classes.subject_id = subjects.id
+                                       WHERE MATCH(subjects.name) AGAINST('+${keywords}*' IN boolean MODE)
+                                       OR MATCH(subjects.subject_code) AGAINST('+${keywords}*' IN boolean MODE)
+                                       LIMIT 10`);
+    return [rows];
+}
 
 module.exports = {
     createClass,
@@ -56,5 +56,5 @@ module.exports = {
     updateClass,
     verifyExistedClass,
     deleteClassById,
-    // getClassbyKeyWord
+    getClassByKeyWord
 };
