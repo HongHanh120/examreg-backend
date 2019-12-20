@@ -7,7 +7,6 @@ const account = require("../models/accounts.models");
 
 async function importStudents(req, res) {
     const file = req.file;
-    console.log(file);
     try {
         if (!file)
             throw new Error("Please upload a file");
