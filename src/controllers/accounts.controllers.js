@@ -140,7 +140,7 @@ async function getCurrentExaminationToken(req, res) {
     } = req.params;
 
     try{
-        let [rows] = await examination.getExamById(examination_id);
+        let [rows] = await examination.getExaminationById(examination_id);
         if(!rows.length)
             throw new Error("This examination is not existed");
         const now = Date.now().toString().slice(0, 10);
