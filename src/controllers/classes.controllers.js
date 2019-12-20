@@ -7,9 +7,7 @@ const subjectModel = require("../models/subjects.models");
 
 async function importClasses(req, res) {
     const {examination_id} = req.tokenData;
-    console.log(examination_id);
     const file = req.file;
-    console.log(file);
     try {
         if (!file)
             throw new Error("Please upload a file");
@@ -69,7 +67,22 @@ async function createClass(req, res) {
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
+}
 
+async function getInformation(req, res) {
+    const {id} = req.query;
+    try {
+        if(!id)
+            throw new Error("Id field is missing");
+        const [existedClass] = await classModel.getClassById(id);
+        if(!existedClass.length)
+            throw new Error("This class is not existed");
+        let [rows] = await classModel.getClassById(id);
+        rows = rows[0];
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
 }
 
 async function getAllClass(req, res) {
@@ -115,7 +128,8 @@ async function updateClass(req, res) {
 async function deleteClasses(req, res) {
     const {id} = req.body;
     try {
-        if (!id) throw new Error("Id field is missing");
+        if (!id)
+            throw new Error("Id field is missing");
         let existedClasses = [];
         let notExistedClasses = [];
         for (let i = 0; i < id.length; i++) {
@@ -153,7 +167,7 @@ async function deleteClass(req, res) {
 };
 
 async function getClassByKeyword(req, res) {
-    const {keywords} = req.params;
+    const {keywords} = req.query;
     try {
         if (!keywords)
             throw new Error("Keywords is missing");
@@ -172,5 +186,6 @@ module.exports = {
     deleteClasses,
     getAllClass,
     updateClass,
-    getClassByKeyword
+    getClassByKeyword,
+    getInformation
 };

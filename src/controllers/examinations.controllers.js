@@ -20,6 +20,23 @@ async function createExamination(req, res) {
     }
 }
 
+async function getInformation(req, res) {
+    const {id} = req.query;
+    try {
+        if(!id)
+            throw new Error("Id field is missing");
+
+        const [existedExam] = await examination.getExaminationById(id);
+        if (!existedExam.length)
+            throw new Error("This examination is existed");
+        let [rows] = await examination.getExaminationById(id);
+        rows = rows[0];
+        res.json(responseUtil.success({data: {rows}}))
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}))
+    }
+}
+
 async function getAllExaminations(req, res) {
     try {
         [exams] = await examination.getAllExaminations();
@@ -73,8 +90,8 @@ async function getExaminationByKeyword(req, res) {
         if (!keywords)
             throw new Error("Keywords is missing");
         keywords.toString();
-        [examinations] = await examination.getExaminationByKeyword(keywords);
-        res.json(responseUtil.success({data: {exams: [examinations]}}));
+        const [rows] = await examination.getExaminationByKeyword(keywords);
+        res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
@@ -85,5 +102,6 @@ module.exports = {
     getAllExaminations,
     updateExamination,
     deleteExamination,
-    getExaminationByKeyword
+    getExaminationByKeyword,
+    getInformation
 };
