@@ -30,14 +30,14 @@ async function createSubject(req, res) {
 }
 
 async function deleteSubject(req, res) {
-    const {id} = req.body;
+    const {subject_code} = req.body;
     try {
-        if (!id)
-            throw new Error("Id field is missing");
-        const [existedSubject] = await subject.getSubjectById(id);
+        if (!subject_code)
+            throw new Error("Subject_code field is missing");
+        const [existedSubject] = await subject.getSubjectByCourseCode(subject_code);
         if (!existedSubject.length)
             throw new Error("This subject is not existed");
-        await subject.deleteSubjectById(id);
+        await subject.deleteSubjectById(subject_code);
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -45,18 +45,18 @@ async function deleteSubject(req, res) {
 }
 
 async function deleteSubjects(req, res) {
-    const {id} = req.body;
+    const {subject_code} = req.body;
     try {
-        if (!id)
-            throw new Error("Id field is missing");
+        if (!subject_code)
+            throw new Error("Subject_code field is missing");
         let existedSubjects = [];
         let notExistedSubjects = [];
-        for (let i = 0; i < id.length; i++) {
-            const [existedSubject] = await subject.getSubjectById(id[i]);
+        for (let i = 0; i < subject_code.length; i++) {
+            const [existedSubject] = await subject.getSubjectByCourseCode(subject_code[i]);
             if (existedSubject.length)
-                existedSubjects.push(id[i]);
+                existedSubjects.push(subject_code[i]);
             else
-                notExistedSubjects.push(id[i]);
+                notExistedSubjects.push(subject_code[i]);
         }
         for (let i = 0; i < existedSubjects.length; i++) {
             await subject.deleteSubjectById(existedSubjects[i]);
@@ -72,7 +72,6 @@ async function deleteSubjects(req, res) {
 
 async function updateSubject(req, res) {
     const {
-        id,
         name,
         subject_code,
         credit
@@ -84,18 +83,12 @@ async function updateSubject(req, res) {
             throw new Error("Name field is missing");
         if (!credit)
             throw new Error("Credit field is missing");
-        if (!id)
-            throw new Error("Id field is missing");
 
-        const [existedSubject] = await subject.getSubjectById(id);
+        const [existedSubject] = await subject.getSubjectByCourseCode(subject_code);
         if (!existedSubject.length)
             throw new Error("This subject is not existed");
 
-        const [duplication] = await subject.getSubjectByCourseCode(subject_code);
-        if (duplication.length)
-            throw new Error("This subject is existed");
-
-        await subject.updateSubject(id, name, subject_code, credit);
+        await subject.updateSubject(name, subject_code, credit);
 
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
@@ -118,7 +111,7 @@ async function getSubjectByKeyword(req, res) {
         if (!keywords)
             throw new Error("Keywords is missing");
 
-        [subjects] = await subject.getSubjectByKeyword(keywords);
+        const [subjects] = await subject.findSubjectByKeyword(keywords);
         res.json(responseUtil.success({data: {subjects: subjects}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -126,11 +119,13 @@ async function getSubjectByKeyword(req, res) {
 }
 
 async function getInformation(req, res) {
-    const {id} = req.query;
+    const {subjectCode} = req.query;
+    console.log(subjectCode);
     try {
-        if (!id)
-            throw new Error("Id field is missing");
-        let [existedSubject] = await subject.getSubjectById(id);
+        if (!subjectCode)
+            throw new Error("Subject-code field is missing");
+        let [existedSubject] = await subject.getSubjectByCourseCode(subjectCode);
+        console.log(existedSubject);
         if (!existedSubject.length)
             throw new Error("This subject is not existed");
         existedSubject = existedSubject[0];
