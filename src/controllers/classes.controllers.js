@@ -17,7 +17,7 @@ async function importClasses(req, res) {
             columnToKey: {
                 B: "class_code",
                 C: "examination_id",
-                D: "subject_id"
+                D: "subject_code"
             }
         });
         const firstSheet = Object.keys(classSheet)[0];
@@ -25,12 +25,12 @@ async function importClasses(req, res) {
 
         let existedClasses = [];
         for (let subjectClass of classes) {
-            const [existedClassCode] = await classModel.verifyExistedClass(subjectClass.class_code, examination_id, subjectClass.subject_id);
+            const [existedClassCode] = await classModel.verifyExistedClass(subjectClass.class_code, examination_id, subjectClass.subject_code);
             if (existedClassCode.length)
                 existedClasses.push({classCode: subjectClass.class_code});
             else {
-                let {class_code, examination_id, subject_id} = subjectClass;
-                await classModel.createClass(class_code, examination_id, subject_id);
+                let {class_code, examination_id, subject_code} = subjectClass;
+                await classModel.createClass(class_code, examination_id, subject_code);
             }
         }
         if (existedClasses.length)
@@ -46,22 +46,22 @@ async function createClass(req, res) {
     const {examination_id} = req.tokenData;
     const {
         class_code,
-        subject_id
+        subject_code
     } = req.body;
     try {
         if (!class_code)
             throw new Error("Class_code field is missing");
-        if (!subject_id)
-            throw new Error("Subject_id field is missing");
+        if (!subject_code)
+            throw new Error("Subject_code field is missing");
 
-        const [existedSubject] = await subjectModel.getSubjectById(subject_id); //kiem tra subject co ton tai k
+        const [existedSubject] = await subjectModel.getSubjectByCourseCode(subject_code); //kiem tra subject co ton tai k
         if (!existedSubject.length)
             throw new Error("This subject is not existed");
-        const [existedClass] = await classModel.verifyExistedClass(class_code, examination_id, subject_id);
+        const [existedClass] = await classModel.verifyExistedClass(class_code, examination_id, subject_code);
         if (existedClass.length)
             throw new Error("This class is existed");
 
-        await classModel.createClass(class_code, examination_id, subject_id);
+        await classModel.createClass(class_code, examination_id, subject_code);
 
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
@@ -99,25 +99,25 @@ async function updateClass(req, res) {
     const {
         id,
         class_code,
-        subject_id
+        subject_code
     } = req.body;
 
     try {
         if (!class_code)
             throw new Error("Class_code field is missing");
-        if (!subject_id)
-            throw new Error("Subject_id field is missing");
+        if (!subject_code)
+            throw new Error("Subject_code field is missing");
         if (!id)
             throw new Error("Id field is missing");
 
-        const [existedSubject] = await subjectModel.getSubjectById(subject_id);//kiem tra subject co ton tai k
+        const [existedSubject] = await subjectModel.getSubjectByCourseCode(subject_code);//kiem tra subject co ton tai k
         if (!existedSubject.length)
             throw new Error("This subject is not existed");
         const [existedClass] = await classModel.getClassById(id);
         if (!existedClass.length)
             throw new Error("This class is not existed in this examination");
 
-        await classModel.updateClass(id, class_code, subject_id);
+        await classModel.updateClass(id, class_code, subject_code);
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));

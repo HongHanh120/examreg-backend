@@ -15,12 +15,11 @@ router.put("/password",
     accountController.changePassword);
 router.get("/student",
     token.verify,
-    privilege.verify(1),
     privilege.verify(2),
     accountController.getStudentList);
 router.get("/admin",
     token.verify,
-    privilege.verify(1),
+    privilege.verify(2),
     accountController.getAdminList);
 router.get("/examination/:examination_id",
     token.verify,

@@ -7,7 +7,6 @@ const token = require("../middlewares/tokenLogin.middlewares");
 const studentController = require("../controllers/students.controllers");
 
 router.post("/", token.verify,
-    privilege.verify(1),
     privilege.verify(2),
     multerMiddleware.upload.single("students"),
     studentController.importStudents);
