@@ -10,7 +10,7 @@ async function updateSubject(id, name, subject_code, credit) {
     await dbPool.query(`UPDATE subjects 
                         SET name = "${name}",
                             subject_code = "${subject_code}",
-                            credit = "${credit}"
+                            credit = ${credit}
                         WHERE id = ${id}`);
 }
 
