@@ -48,14 +48,14 @@ async function deleteSubjects(req, res) {
             throw new Error("Id field is missing");
         let existedSubjects = [];
         let notExistedSubjects = [];
-        for(let i = 0; i < id.length; i++){
+        for (let i = 0; i < id.length; i++) {
             const [existedSubject] = await subject.getSubjectById(id[i]);
-            if(existedSubject.length)
+            if (existedSubject.length)
                 existedSubjects.push(id[i]);
             else
                 notExistedSubjects.push(id[i]);
         }
-        for(let i = 0; i <existedSubjects.length; i++){
+        for (let i = 0; i < existedSubjects.length; i++) {
             await subject.deleteSubjectById(existedSubjects[i]);
         }
         if (notExistedSubjects.length)
@@ -122,17 +122,16 @@ async function getSubjectByKeyword(req, res) {
     }
 }
 
-async function getInformation(req, res){
+async function getInformation(req, res) {
     const {id} = req.query;
     try {
-        if(!id)
+        if (!id)
             throw new Error("Id field is missing");
-        const [existedSubject] = await subject.getSubjectById(id);
-        if(!existedSubject.length)
+        let [existedSubject] = await subject.getSubjectById(id);
+        if (!existedSubject.length)
             throw new Error("This subject is not existed");
-        let [rows] = await subject.getSubjectById(id);
-        rows = rows[0];
-        res.json(responseUtil.success({data: {rows}}));
+        existedSubject = existedSubject[0];
+        res.json(responseUtil.success({data: {existedSubject}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
