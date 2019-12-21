@@ -19,12 +19,10 @@ router.delete("/",
     shiftController.deleteShift);
 router.get("/",
     examinationToken.verify,
-    privilege.verify(1),
     privilege.verify(2),
     shiftController.getAllShift);
 router.get("/information",
     examinationToken.verify,
-    privilege.verify(1),
     privilege.verify(2),
     shiftController.getInformation);
 
