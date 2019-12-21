@@ -24,7 +24,7 @@ async function importClassesStudents(req, res) {
         const firstSheet = Object.keys(classesStudentsSheet)[0];
         const class_students = classesStudentsSheet[firstSheet].slice(1, classesStudentsSheet[firstSheet].length);
 
-        let existedStudents = [];
+        let existedElements = [];
         for (let class_student of class_students) {
 
             let subject_code = class_student.class_code_id.slice(0, 7);
@@ -32,9 +32,15 @@ async function importClassesStudents(req, res) {
             let [rows] = await classes.getId(class_code, subject_code);
             class_student.class_code_id = rows[0].id;
 
-            const [existedStudent] = await classStudent.verifyDuplication(class_student.student_code, class_student.class_code_id, examination_id);
+            const [existedStudent] =
+                await classStudent.verifyDuplication(class_student.student_code, class_student.class_code_id, examination_id);
+            const [existedSubject] =
+                await classStudent.checkSubjectCode(class_student.student_code, subject_code, examination_id);
+
             if (existedStudent.length)
-                existedStudents.push({class_student});
+                existedElements.push({class_student});
+            else if (existedSubject.length)
+                existedElements.push({class_student});
             else {
                 let [account_id] = await account.getUserByUsername(class_student.student_code);
                 account_id = account_id[0];
@@ -42,8 +48,8 @@ async function importClassesStudents(req, res) {
                 await classStudent.create(student_code, class_code_id, eligibility, account_id.id);
             }
         }
-        if (existedStudents.length)
-            throw new Error("Student is existed: " + JSON.stringify(existedStudents));
+        if (existedElements.length)
+            throw new Error("Student is existed: " + JSON.stringify(existedElements));
 
         fs.unlinkSync(filePath);
         res.json(responseUtil.success({data: {}}));
