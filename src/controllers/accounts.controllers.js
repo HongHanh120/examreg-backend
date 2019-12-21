@@ -139,24 +139,66 @@ async function getCurrentExaminationToken(req, res) {
         examination_id
     } = req.params;
 
-    try{
+    try {
         let [rows] = await examination.getExaminationById(examination_id);
-        if(!rows.length)
+        if (!rows.length)
             throw new Error("This examination is not existed");
         const now = Date.now().toString().slice(0, 10);
         const expToken = req.tokenData.exp - now;
 
         const examinationToken = jwt.sign({
-            id: req.tokenData.id,
-            examination_id
-        },
-        config.get("EXAMINATION_SECRET_KEY"), {
-            expiresIn: expToken
-        }
-    );
-        res.json(responseUtil.success({data: {examinationToken}}))
-    } catch(err) {
-        res.json(responseUtil.fail({reason: err.message}))
+                id: req.tokenData.id,
+                examination_id
+            },
+            config.get("EXAMINATION_SECRET_KEY"), {
+                expiresIn: expToken
+            }
+        );
+        res.json(responseUtil.success({data: {examinationToken}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function updateInformation(req, res) {
+    const {id} = req.tokenData;
+    const {
+        fullname,
+        date_of_birth
+    } = req.body;
+
+    try {
+        if (!fullname)
+            throw new Error("Fullname field is missing");
+        if (!date_of_birth)
+            throw new Error("Date_of_birth field is missing");
+
+        const [existedUser] = await account.getUserById(id);
+        if (!existedUser.length)
+            throw new Error("This user is not existed");
+
+        await account.updateInformation(id, fullname, date_of_birth);
+        res.json(responseUtil.success({data: {}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function deleteUser(req, res) {
+    const {id} = req.tokenData;
+    const {id_user} = req.body;
+    try {
+        if (!id_user)
+            throw new Error("Id_user field is missing");
+
+        const [existedUser] = await account.getUserById(id_user);
+        if (!existedUser.length)
+            throw new Error("This user is not existed");
+
+        await account.deleteUserById(id_user);
+        res.json(responseUtil.success({data: {}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
     }
 }
 
@@ -166,5 +208,7 @@ module.exports = {
     changePassword,
     getStudentList,
     getAdminList,
-    getCurrentExaminationToken
+    getCurrentExaminationToken,
+    updateInformation,
+    deleteUser
 };

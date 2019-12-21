@@ -46,6 +46,18 @@ async function getAllAdmin() {
     return [rows];
 }
 
+async function updateInformation(id, fullname, date_of_birth){
+    await dbPool.query(`UPDATE accounts
+                            SET fullname = "${fullname}",
+                                date_of_birth = ${date_of_birth}
+                            WHERE id = ${id}`)
+}
+
+async function deleteUserById(id) {
+    await dbPool.query(`DELETE FROM accounts
+                            WHERE id = ${id}`)
+}
+
 module.exports = {
     getUserById,
     getUserByUsername,
@@ -54,6 +66,8 @@ module.exports = {
     updatePassword,
     getAllStudent,
     getAllAdmin,
+    updateInformation,
+    deleteUserById
 };
 
 
