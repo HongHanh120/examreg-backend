@@ -72,13 +72,7 @@ async function updateSubject(req, res) {
 
 async function getAllSubject(req, res) {
     try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
-        [subjects] = await subject.getAllSubjects(offset, limit);
+        [subjects] = await subject.getAllSubjects();
         res.json(responseUtil.success({data: {subjects: subjects}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -88,17 +82,11 @@ async function getAllSubject(req, res) {
 async function getSubjectByKeyword(req, res) {
     const {keywords} = req.query;
     try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
         let results = [];
         if (keywords)
-            [results] = await subject.findSubjectByKeyword(offset, limit, keywords);
+            [results] = await subject.findSubjectByKeyword(keywords);
         else
-            [results] = await subject.getAllSubjects(offset, limit);
+            [results] = await subject.getAllSubjects();
 
         res.json(responseUtil.success({data: {subjects: results}}));
     } catch (err) {
