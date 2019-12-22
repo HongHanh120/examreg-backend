@@ -28,7 +28,7 @@ async function getInformation(req, res) {
 
         const [existedExam] = await examination.getExaminationById(id);
         if (!existedExam.length)
-            throw new Error("This examination is existed");
+            throw new Error("This examination is not existed");
         let [rows] = await examination.getExaminationById(id);
         rows = rows[0];
         res.json(responseUtil.success({data: {rows}}));

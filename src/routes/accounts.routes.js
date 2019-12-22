@@ -17,11 +17,6 @@ router.put("/password",
     token.verify,
     accountController.changePassword);
 
-router.get("/student",
-    token.verify,
-    privilege.verify(2),
-    accountController.getStudentList);
-
 router.get("/admin",
     token.verify,
     privilege.verify(2),

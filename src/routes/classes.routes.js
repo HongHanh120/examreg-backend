@@ -27,11 +27,6 @@ router.delete("/",
     privilege.verify(2),
     classController.deleteClass);
 
-router.delete("/multi/",
-    examinationToken.verify,
-    privilege.verify(2),
-    classController.deleteClasses);
-
 router.get("/",
     examinationToken.verify,
     privilege.verify(2),

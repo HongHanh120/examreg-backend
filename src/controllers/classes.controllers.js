@@ -131,33 +131,6 @@ async function updateClass(req, res) {
     }
 }
 
-async function deleteClasses(req, res) {
-    const {id} = req.query;
-    try {
-        if (!id)
-            throw new Error("Id field is missing");
-        let existedClasses = [];
-        let notExistedClasses = [];
-        for (let i = 0; i < id.length; i++) {
-            console.log(id[i]);
-            const [existedClass] = await classModel.getClassById(id[i]);
-            console.log(existedClasses);
-            if (existedClass.length)
-                existedClasses.push(id[i]);
-            else
-                notExistedClasses.push(id[i]);
-        }
-        for (let i = 0; i < existedClasses.length; i++) {
-            await classModel.deleteClassById(existedClasses[i]);
-        }
-        if (notExistedClasses.length)
-            throw new Error("These classes is not existed: " + JSON.stringify(notExistedClasses));
-        res.json(responseUtil.success({data: {}}));
-    } catch (err) {
-        res.json(responseUtil.fail({reason: err.message}));
-    }
-};
-
 async function deleteClass(req, res) {
     const {id} = req.query;
     try {
@@ -201,7 +174,6 @@ module.exports = {
     importClasses,
     createClass,
     deleteClass,
-    deleteClasses,
     getAllClass,
     updateClass,
     getClassByKeyword,
