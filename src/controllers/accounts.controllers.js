@@ -192,8 +192,10 @@ async function updateInformation(req, res) {
 }
 
 async function deleteUser(req, res) {
-    const {member_id} = req.body;
+    const {member_id} = req.query;
     try {
+        if (!member_id)
+            throw new Error("Member_id field is missing");
         await account.deleteUserById(member_id);
         res.json(responseUtil.success({data: {}}));
     } catch (err) {

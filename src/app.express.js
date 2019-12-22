@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const config = require("config");
+const cors = require("cors");
 
 const accountsRoute = require("./routes/accounts.routes");
 const studentsRoute = require("./routes/students.routes");
@@ -16,6 +17,7 @@ const shiftsRoomsStudentsRoute = require("./routes/shifts_rooms_students.routes"
 
 const appExpress = express();
 
+appExpress.use(cors());
 appExpress.use(bodyParser.json());
 appExpress.use(bodyParser.urlencoded({extended: false}));
 appExpress.use(morgan("combined"));

@@ -30,7 +30,7 @@ async function createSubject(req, res) {
 }
 
 async function deleteSubject(req, res) {
-    const {subject_code} = req.body;
+    const {subject_code} = req.query;
     try {
         if (!subject_code)
             throw new Error("Subject_code field is missing");
@@ -45,7 +45,7 @@ async function deleteSubject(req, res) {
 }
 
 async function deleteSubjects(req, res) {
-    const {subject_code} = req.body;
+    const {subject_code} = req.query;
     try {
         if (!subject_code)
             throw new Error("Subject_code field is missing");

@@ -40,7 +40,7 @@ async function create(req, res) {
 
 async function deleteShiftRoomStudent(req, res) {
     const {id} = req.tokenData;
-    const {shift_room_student_id} = req.body;
+    const {shift_room_student_id} = req.query;
     try {
         if (!shift_room_student_id)
             throw new Error("Id field is missing");
