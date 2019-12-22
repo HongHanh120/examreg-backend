@@ -11,6 +11,7 @@ const classesRoute = require("./routes/classes.routes");
 const roomsRoute = require("./routes/rooms.routes");
 const shiftsRoute = require("./routes/shifts.routes");
 const classesStudentsRoute = require("./routes/classes_students.routes");
+const shiftsRoomsRoute = require("./routes/shifts_rooms.routes");
 
 const appExpress = express();
 
@@ -26,6 +27,7 @@ appExpress.use("/api/v1/classes/", classesRoute);
 appExpress.use("/api/v1/rooms/", roomsRoute);
 appExpress.use("/api/v1/shifts/", shiftsRoute);
 appExpress.use("/api/v1/classesStudents/", classesStudentsRoute);
+appExpress.use("/api/v1/shiftsRooms", shiftsRoomsRoute);
 
 appExpress.use("api/v1", (req, res) => {
     res.send("examreg-backend");

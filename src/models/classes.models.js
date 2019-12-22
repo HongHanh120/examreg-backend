@@ -56,6 +56,14 @@ async function getId(class_code, subject_code) {
     return [rows];
 }
 
+async function checkSubject(subject_code, examination_id) {
+    const [rows] = await dbPool.query(`SELECT *
+                                            FROM classes
+                                            WHERE subject_code = "${subject_code}"
+                                            AND examination_id = ${examination_id}`);
+    return [rows];
+}
+
 module.exports = {
     createClass,
     getClassById,
@@ -64,5 +72,6 @@ module.exports = {
     verifyExistedClass,
     deleteClassById,
     getClassByKeyWord,
-    getId
+    getId,
+    checkSubject
 };

@@ -48,8 +48,6 @@ async function register(req, res) {
         date_of_birth,
         email
     } = req.body;
-    console.log(req.body.username);
-    const [a] = await account.getUserByUsername("hanh2001");
     try {
         if (username.length < 8)
             throw new Error("Username must greater than 8 characters");
@@ -75,6 +73,9 @@ async function register(req, res) {
         let hashPassword = await bcrypt.hash(password, salt);
 
         await account.createUser(username, hashPassword, fullname, date_of_birth, "", email);
+        let [user] = await account.getUserByUsername(username);
+        user = user[0].id;
+        await account.changeRole(user);
 
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
@@ -139,24 +140,58 @@ async function getCurrentExaminationToken(req, res) {
         examination_id
     } = req.params;
 
-    try{
+    try {
         let [rows] = await examination.getExaminationById(examination_id);
-        if(!rows.length)
+        if (!rows.length)
             throw new Error("This examination is not existed");
         const now = Date.now().toString().slice(0, 10);
         const expToken = req.tokenData.exp - now;
 
         const examinationToken = jwt.sign({
-            id: req.tokenData.id,
-            examination_id
-        },
-        config.get("EXAMINATION_SECRET_KEY"), {
-            expiresIn: expToken
-        }
-    );
-        res.json(responseUtil.success({data: {examinationToken}}))
-    } catch(err) {
-        res.json(responseUtil.fail({reason: err.message}))
+                id: req.tokenData.id,
+                examination_id
+            },
+            config.get("EXAMINATION_SECRET_KEY"), {
+                expiresIn: expToken
+            }
+        );
+        res.json(responseUtil.success({data: {examinationToken}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function updateInformation(req, res) {
+    const {id} = req.tokenData;
+    const {
+        fullname,
+        date_of_birth
+    } = req.body;
+
+    try {
+        if (!fullname)
+            throw new Error("Fullname field is missing");
+        if (!date_of_birth)
+            throw new Error("Date_of_birth field is missing");
+
+        const [existedUser] = await account.getUserById(id);
+        if (!existedUser.length)
+            throw new Error("This user is not existed");
+
+        await account.updateInformation(id, fullname, date_of_birth);
+        res.json(responseUtil.success({data: {}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function deleteUser(req, res) {
+    const {member_id} = req.body;
+    try {
+        await account.deleteUserById(member_id);
+        res.json(responseUtil.success({data: {}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
     }
 }
 
@@ -166,5 +201,7 @@ module.exports = {
     changePassword,
     getStudentList,
     getAdminList,
-    getCurrentExaminationToken
+    getCurrentExaminationToken,
+    updateInformation,
+    deleteUser
 };

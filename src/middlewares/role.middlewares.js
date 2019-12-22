@@ -3,7 +3,14 @@ const account = require("../models/accounts.models");
 
 async function verify(req, res, next) {
     try {
-        const {affectedUserRole} = req;
+        const {member_id} = req.body;
+        if (!member_id)
+            throw new Error("Member_id field is missing");
+        const [affectedMember] = await account.getUserById(member_id);
+        if (!affectedMember.length)
+            throw new Error("Member_id which you sent is not existed");
+        const affectedUserRole = affectedMember[0].role_id;
+        console.log(affectedUserRole);
         const {id} = req.tokenData;
         if (!affectedUserRole) throw new Error("Please enter user whom affected of this action");
         const [user] = await account.getUserById(id);

@@ -39,11 +39,30 @@ async function getAllStudent() {
                                         WHERE role_id = 2`);
     return [rows];
 }
+
 async function getAllAdmin() {
     const [rows] = await dbPool.query(`SELECT username, fullname, date_of_birth, course_class, email, role_id
                                         FROM accounts
                                         WHERE role_id = 1 OR role_id = 3`);
     return [rows];
+}
+
+async function updateInformation(id, fullname, date_of_birth) {
+    await dbPool.query(`UPDATE accounts
+                            SET fullname = "${fullname}",
+                                date_of_birth = ${date_of_birth}
+                            WHERE id = ${id}`);
+}
+
+async function deleteUserById(id) {
+    await dbPool.query(`DELETE FROM accounts
+                            WHERE id = ${id}`);
+}
+
+async function changeRole(id) {
+    await dbPool.query(`UPDATE accounts
+                            SET role_id = 1
+                            WHERE id = ${id}`);
 }
 
 module.exports = {
@@ -54,6 +73,9 @@ module.exports = {
     updatePassword,
     getAllStudent,
     getAllAdmin,
+    updateInformation,
+    deleteUserById,
+    changeRole
 };
 
 

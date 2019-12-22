@@ -122,7 +122,6 @@ async function updateClass(req, res) {
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
-
 }
 
 async function deleteClasses(req, res) {
