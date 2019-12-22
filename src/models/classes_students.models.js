@@ -23,9 +23,16 @@ async function checkSubjectCode(student_code, subject_code, examination_id) {
     return [rows];
 }
 
+async function getStudentById(id) {
+    const [rows] = await dbPool.query(`SELECT *
+                                            FROM classes_students
+                                            WHERE id = ${id}`);
+    return [rows];
+}
 
 module.exports = {
     verifyDuplication,
     create,
-    checkSubjectCode
+    checkSubjectCode,
+    getStudentById
 };

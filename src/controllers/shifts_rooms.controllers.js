@@ -5,7 +5,6 @@ const room = require("../models/rooms.models");
 const subject = require("../models/subjects.models");
 const classes = require("../models/classes.models");
 
-
 async function create(req, res) {
     const {id, examination_id} = req.tokenData;
     const {
@@ -101,7 +100,63 @@ async function update(req, res) {
     }
 }
 
+async function deleteShiftRoom(req, res) {
+    const {id, examination_id} = req.tokenData;
+    const {
+        shift_room_id
+    } = req.body;
+    try {
+        let [creator_id] = await shift_room.getShiftRoomById(shift_room_id);
+        creator_id = creator_id[0].creator_id;
+        if (creator_id !== id)
+            throw new Error("You haven't privilege to use this action");
+
+        if (!shift_room_id)
+            throw new Error("Shift_room_id field is missing");
+
+        const [existed] = await shift_room.getShiftRoomById(shift_room_id);
+        if (!existed.length)
+            throw new Error("Shift_room is not existed");
+
+        await shift_room.deleteById(shift_room_id);
+        res.json(responseUtil.success({data: {}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function getInformation(req, res) {
+    const {shift_room_id} = req.query;
+    try {
+        if (!shift_room_id)
+            throw new Error("Shift_room_id field is missing");
+
+        let [existedShiftRoom] = await shift_room.getShiftRoomById(shift_room_id);
+        if (!existedShiftRoom.length)
+            throw new Error("This shift is not existed");
+
+        existedShiftRoom = existedShiftRoom[0];
+
+        res.json(responseUtil.success({data: {existedShiftRoom}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function getList(req, res){
+    try {
+        const [rows] = await shift_room.getAll();
+        console.log(rows);
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
 module.exports = {
     create,
-    update
+    update,
+    deleteShiftRoom,
+    getInformation,
+    getList
 };

@@ -21,7 +21,7 @@ async function getShiftRoomById(shift_room_id) {
     return [rows];
 }
 
-async function update(id, shift_id, room_id, current_slot, subject_code){
+async function update(id, shift_id, room_id, current_slot, subject_code) {
     await dbPool.query(`UPDATE shifts_rooms 
                         SET shift_id = "${shift_id}",
                             room_id = ${room_id},
@@ -30,9 +30,22 @@ async function update(id, shift_id, room_id, current_slot, subject_code){
                         WHERE id = ${id}`);
 }
 
+async function deleteById(id) {
+    await dbPool.query(`DELETE FROM shifts_rooms
+                            WHERE id = ${id}`);
+}
+
+async function getAll() {
+    const [rows] = await dbPool.query(`SELECT * 
+                                        FROM shifts_rooms`);
+    return [rows];
+}
+
 module.exports = {
     checkShiftRoom,
     create,
     getShiftRoomById,
-    update
+    update,
+    deleteById,
+    getAll
 };

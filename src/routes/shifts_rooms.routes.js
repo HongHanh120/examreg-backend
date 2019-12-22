@@ -15,4 +15,18 @@ router.put("/",
     privilege.verify(2),
     shiftRoomController.update);
 
+router.delete("/",
+    examinationToken.verify,
+    privilege.verify(2),
+    shiftRoomController.deleteShiftRoom);
+
+router.get("/information",
+    examinationToken.verify,
+    privilege.verify(2),
+    shiftRoomController.getInformation);
+
+router.get("/",
+    examinationToken.verify,
+    shiftRoomController.getList);
+
 module.exports = router;
