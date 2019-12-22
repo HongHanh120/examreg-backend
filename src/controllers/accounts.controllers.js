@@ -33,7 +33,13 @@ async function login(req, res) {
             }
         );
 
-        res.json(responseUtil.success({data: {token}}));
+        let [role_id] = await account.getRole(username);
+        role_id = role_id[0].role_id;
+        let admin = 0;
+        if (role_id === 1 || role_id === 3)
+            admin = 1;
+
+        res.json(responseUtil.success({data: {token, admin}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }

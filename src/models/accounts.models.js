@@ -65,6 +65,13 @@ async function changeRole(id) {
                             WHERE id = ${id}`);
 }
 
+async function getRole(username) {
+    const [rows] = await dbPool.query(`SELECT *
+                                            FROM accounts
+                                            WHERE username = "${username}"`);
+    return [rows];
+}
+
 module.exports = {
     getUserById,
     getUserByUsername,
@@ -75,7 +82,8 @@ module.exports = {
     getAllAdmin,
     updateInformation,
     deleteUserById,
-    changeRole
+    changeRole,
+    getRole
 };
 
 
