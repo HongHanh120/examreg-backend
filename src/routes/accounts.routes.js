@@ -26,7 +26,7 @@ router.get("/examination/:examination_id",
     token.verify,
     accountController.getCurrentExaminationToken);
 
-router.put("/information",
+router.put("/",
     token.verify,
     accountController.updateInformation);
 

@@ -169,7 +169,8 @@ async function updateInformation(req, res) {
     const {id} = req.tokenData;
     const {
         fullname,
-        date_of_birth
+        date_of_birth,
+        email
     } = req.body;
 
     try {
@@ -177,12 +178,18 @@ async function updateInformation(req, res) {
             throw new Error("Fullname field is missing");
         if (!date_of_birth)
             throw new Error("Date_of_birth field is missing");
+        if (!email)
+            throw new Error("Email field is missing");
 
         const [existedUser] = await account.getUserById(id);
         if (!existedUser.length)
             throw new Error("This user is not existed");
 
-        await account.updateInformation(id, fullname, date_of_birth);
+        const [existedEmail] = await account.getUserByEmail(email);
+        if (existedEmail.length)
+            throw new Error("This email is used by other account");
+
+        await account.updateInformation(id, fullname, date_of_birth, email);
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
