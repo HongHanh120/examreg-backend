@@ -145,8 +145,13 @@ async function getInformation(req, res) {
 
 async function getList(req, res) {
     try {
-        const [rows] = await shift_room.getAll();
-        console.log(rows);
+        let {page, pageSize} = req.query;
+        if (!page) page = 1;
+        if (!pageSize) pageSize = 20;
+        const offset = (page - 1) * pageSize;
+        const limit = Number(pageSize);
+
+        const [rows] = await shift_room.getAll(offset, limit);
         res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));

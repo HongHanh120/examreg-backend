@@ -56,7 +56,13 @@ async function updateRoom(req, res) {
 
 async function getAllRoom(req, res) {
     try {
-        [rooms] = await room.getAllRoom();
+        let {page, pageSize} = req.query;
+        if (!page) page = 1;
+        if (!pageSize) pageSize = 20;
+        const offset = (page - 1) * pageSize;
+        const limit = Number(pageSize);
+
+        [rooms] = await room.getAllRoom(offset, limit);
         res.json(responseUtil.success({data: {rooms}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));

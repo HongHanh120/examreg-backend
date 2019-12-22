@@ -91,7 +91,13 @@ async function register(req, res) {
 
 async function getStudentList(req, res) {
     try {
-        const [rows] = await account.getAllStudent();
+        let {page, pageSize} = req.query;
+        if (!page) page = 1;
+        if (!pageSize) pageSize = 20;
+        const offset = (page - 1) * pageSize;
+        const limit = Number(pageSize);
+
+        const [rows] = await account.getAllStudent(offset, limit);
         res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -100,7 +106,13 @@ async function getStudentList(req, res) {
 
 async function getAdminList(req, res) {
     try {
-        const [rows] = await account.getAllAdmin();
+        let {page, pageSize} = req.query;
+        if (!page) page = 1;
+        if (!pageSize) pageSize = 20;
+        const offset = (page - 1) * pageSize;
+        const limit = Number(pageSize);
+
+        const [rows] = await account.getAllAdmin(offset, limit);
         res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
