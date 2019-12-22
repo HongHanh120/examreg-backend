@@ -34,9 +34,13 @@ async function create(req, res) {
         if (!existedSubject.length)
             throw new Error("This subject is not existed");
 
-        const [existed] = await shift_room.checkShiftRoom(shift_id, room_id, subject_code);
-        if (existed.length)
-            throw new Error("Shift_room is existed");
+        const [existedShiftRoom] = await shift_room.checkShiftRoom(shift_id, room_id);
+        if (existedShiftRoom.length)
+            throw new Error("This shift is full in this room");
+
+        // const [existedDuplication] = await shift_room.checkDuplication(shift_id, room_id, subject_code);
+        // if(existedDuplication.length)
+        //     throw new Error("This subject is existed in shift_room ");
 
         let [current_slot] = await room.getRoomById(room_id);
         current_slot = current_slot[0].slot;
@@ -89,9 +93,13 @@ async function update(req, res) {
         if (!checkSubject.length)
             throw new Error("This examination does not have this subject");
 
-        const [existed] = await shift_room.checkShiftRoom(shift_id, room_id, subject_code);
-        if (existed.length)
-            throw new Error("Shift_room is existed");
+        const [existedShiftRoom] = await shift_room.checkShiftRoom(shift_id, room_id);
+        if (existedShiftRoom.length)
+            throw new Error("This shift is full in this room");
+
+        // const [existedDuplication] = await shift_room.checkDuplication(shift_id, room_id, subject_code);
+        // if(existedDuplication.length)
+        //     throw new Error("This subject is existed in shift_room ");
 
         await shift_room.update(shift_room_id, shift_id, room_id, current_slot, subject_code);
         res.json(responseUtil.success({data: {}}));
@@ -101,7 +109,7 @@ async function update(req, res) {
 }
 
 async function deleteShiftRoom(req, res) {
-    const {id, examination_id} = req.tokenData;
+    const {id} = req.tokenData;
     const {
         shift_room_id
     } = req.query;

@@ -15,11 +15,6 @@ router.delete("/",
     privilege.verify(1),
     subjectController.deleteSubject);
 
-router.delete("/deleteMulti",
-    token.verify,
-    privilege.verify(1),
-    subjectController.deleteSubjects);
-
 router.put("/", token.verify,
     privilege.verify(1),
     subjectController.updateSubject);
@@ -29,7 +24,7 @@ router.get("/",
     privilege.verify(2),
     subjectController.getAllSubject);
 
-router.get("/search/",
+router.get("/search",
     token.verify,
     subjectController.getSubjectByKeyword);
 

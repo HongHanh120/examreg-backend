@@ -89,21 +89,6 @@ async function register(req, res) {
     }
 }
 
-async function getStudentList(req, res) {
-    try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
-        const [rows] = await account.getAllStudent(offset, limit);
-        res.json(responseUtil.success({data: {rows}}));
-    } catch (err) {
-        res.json(responseUtil.fail({reason: err.message}));
-    }
-}
-
 async function getAdminList(req, res) {
     try {
         let {page, pageSize} = req.query;
@@ -162,6 +147,7 @@ async function getCurrentExaminationToken(req, res) {
         let [rows] = await examination.getExaminationById(examination_id);
         if (!rows.length)
             throw new Error("This examination is not existed");
+        console.log(req.tokenData.id);
         const now = Date.now().toString().slice(0, 10);
         const expToken = req.tokenData.exp - now;
 
@@ -219,7 +205,6 @@ module.exports = {
     login,
     register,
     changePassword,
-    getStudentList,
     getAdminList,
     getCurrentExaminationToken,
     updateInformation,

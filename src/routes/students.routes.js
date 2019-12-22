@@ -11,4 +11,9 @@ router.post("/", token.verify,
     multerMiddleware.upload.single("students"),
     studentController.importStudents);
 
+router.get("/",
+    token.verify,
+    privilege.verify(2),
+    studentController.getStudentList);
+
 module.exports = router;

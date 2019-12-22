@@ -44,32 +44,6 @@ async function deleteSubject(req, res) {
     }
 }
 
-async function deleteSubjects(req, res) {
-    const {subject_code} = req.query;
-    try {
-        if (!subject_code)
-            throw new Error("Subject_code field is missing");
-        let existedSubjects = [];
-        let notExistedSubjects = [];
-        for (let i = 0; i < subject_code.length; i++) {
-            const [existedSubject] = await subject.getSubjectByCourseCode(subject_code[i]);
-            if (existedSubject.length)
-                existedSubjects.push(subject_code[i]);
-            else
-                notExistedSubjects.push(subject_code[i]);
-        }
-        for (let i = 0; i < existedSubjects.length; i++) {
-            await subject.deleteSubjectById(existedSubjects[i]);
-        }
-        if (notExistedSubjects.length)
-            throw new Error("These subjects is not existed:" + JSON.stringify(notExistedSubjects));
-
-        res.json(responseUtil.success({data: {}}));
-    } catch (err) {
-        res.json(responseUtil.fail({reason: err.message}));
-    }
-};
-
 async function updateSubject(req, res) {
     const {
         name,
@@ -189,7 +163,6 @@ module.exports = {
     createSubject,
     updateSubject,
     deleteSubject,
-    deleteSubjects,
     getAllSubject,
     getSubjectByKeyword,
     getInformation,
