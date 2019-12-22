@@ -11,7 +11,6 @@ router.post("/login",
     accountController.login);
 
 router.post("/register",
-    privilege.verify(2),
     accountController.register);
 
 router.put("/password",
@@ -38,7 +37,7 @@ router.put("/information",
 
 router.delete("/",
     token.verify,
-    privilege.verify(1),
+    privilege.verify(2),
     role.verify,
     accountController.deleteUser);
 

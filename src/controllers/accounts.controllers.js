@@ -48,8 +48,6 @@ async function register(req, res) {
         date_of_birth,
         email
     } = req.body;
-    console.log(req.body.username);
-    const [a] = await account.getUserByUsername("hanh2001");
     try {
         if (username.length < 8)
             throw new Error("Username must greater than 8 characters");
@@ -75,6 +73,9 @@ async function register(req, res) {
         let hashPassword = await bcrypt.hash(password, salt);
 
         await account.createUser(username, hashPassword, fullname, date_of_birth, "", email);
+        let [user] = await account.getUserByUsername(username);
+        user = user[0].id;
+        await account.changeRole(user);
 
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
@@ -185,17 +186,9 @@ async function updateInformation(req, res) {
 }
 
 async function deleteUser(req, res) {
-    const {id} = req.tokenData;
-    const {id_user} = req.body;
+    const {member_id} = req.body;
     try {
-        if (!id_user)
-            throw new Error("Id_user field is missing");
-
-        const [existedUser] = await account.getUserById(id_user);
-        if (!existedUser.length)
-            throw new Error("This user is not existed");
-
-        await account.deleteUserById(id_user);
+        await account.deleteUserById(member_id);
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
