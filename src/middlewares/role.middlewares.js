@@ -3,7 +3,7 @@ const account = require("../models/accounts.models");
 
 async function verify(req, res, next) {
     try {
-        const {member_id} = req.body;
+        const {member_id} = req.query;
         if (!member_id)
             throw new Error("Member_id field is missing");
 

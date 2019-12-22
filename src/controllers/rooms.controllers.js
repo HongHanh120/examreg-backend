@@ -79,7 +79,7 @@ async function getInformation(req, res) {
 }
 
 async function deleteRoom(req, res) {
-    const {id} = req.body;
+    const {id} = req.query;
     try {
         if (!id)
             throw new Error("Id field is missing");

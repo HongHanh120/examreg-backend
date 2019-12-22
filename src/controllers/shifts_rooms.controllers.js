@@ -104,7 +104,7 @@ async function deleteShiftRoom(req, res) {
     const {id, examination_id} = req.tokenData;
     const {
         shift_room_id
-    } = req.body;
+    } = req.query;
     try {
         let [creator_id] = await shift_room.getShiftRoomById(shift_room_id);
         creator_id = creator_id[0].creator_id;
@@ -143,7 +143,7 @@ async function getInformation(req, res) {
     }
 }
 
-async function getList(req, res){
+async function getList(req, res) {
     try {
         const [rows] = await shift_room.getAll();
         console.log(rows);

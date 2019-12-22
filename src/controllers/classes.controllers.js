@@ -125,14 +125,16 @@ async function updateClass(req, res) {
 }
 
 async function deleteClasses(req, res) {
-    const {id} = req.body;
+    const {id} = req.query;
     try {
         if (!id)
             throw new Error("Id field is missing");
         let existedClasses = [];
         let notExistedClasses = [];
         for (let i = 0; i < id.length; i++) {
+            console.log(id[i]);
             const [existedClass] = await classModel.getClassById(id[i]);
+            console.log(existedClasses)
             if (existedClass.length)
                 existedClasses.push(id[i]);
             else
@@ -150,7 +152,7 @@ async function deleteClasses(req, res) {
 };
 
 async function deleteClass(req, res) {
-    const {id} = req.body;
+    const {id} = req.query;
     try {
         if (!id) throw new Error("Id field is missing");
 
@@ -171,7 +173,7 @@ async function getClassByKeyword(req, res) {
         if (!keywords)
             throw new Error("Keywords is missing");
 
-        [classes] = await classModel.getClassByKeyWord(keywords);
+        let [classes] = await classModel.getClassByKeyWord(keywords);
         res.json(responseUtil.success({data: {classes: classes}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
