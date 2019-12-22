@@ -1,140 +1,209 @@
-const bcrypt = require('bcrypt');
-const config = require('config');
-const jwt = require('jsonwebtoken');
-const responseUtil = require('../utils/response.util');
-const class_model = require('../models/classes.models');
-const exam_model = require("../models/exams.models");
-const subject_model = require("../models/subjects.models")
+const responseUtil = require("../utils/response.util");
+const excelToJson = require("convert-excel-to-json");
+const fs = require("fs");
+
+const classModel = require("../models/classes.models");
+const subjectModel = require("../models/subjects.models");
+
+async function importClasses(req, res) {
+    const {examination_id} = req.tokenData;
+    const file = req.file;
+    try {
+        if (!file)
+            throw new Error("Please upload a file");
+        const filePath = req.file.path;
+        const classSheet = excelToJson({
+            sourceFile: filePath,
+            columnToKey: {
+                B: "class_code",
+                C: "examination_id",
+                D: "subject_code"
+            }
+        });
+        const firstSheet = Object.keys(classSheet)[0];
+        const classes = classSheet[firstSheet].slice(1, classSheet[firstSheet].length);
+
+        let existedClasses = [];
+        for (let subjectClass of classes) {
+            const [existedClassCode] = await classModel.verifyExistedClass(subjectClass.class_code, examination_id, subjectClass.subject_code);
+            if (existedClassCode.length)
+                existedClasses.push({classCode: subjectClass.class_code});
+            else {
+                let {class_code, examination_id, subject_code} = subjectClass;
+                await classModel.createClass(class_code, examination_id, subject_code);
+            }
+        }
+        if (existedClasses.length)
+            throw new Error("Class code is existed: " + JSON.stringify(existedClasses));
+        fs.unlinkSync(filePath);
+        res.json(responseUtil.success({data: {}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
 
 async function createClass(req, res) {
+    const {examination_id} = req.tokenData;
     const {
         class_code,
-        examination_id,
-        subject_id
+        subject_code
     } = req.body;
     try {
         if (!class_code)
-            throw new Error('class_code field is missing');
-        if (!examination_id)
-            throw new Error('examination_id field is missing');
-        if (!subject_id)
-            throw new Error('subject_id field is missing');
+            throw new Error("Class_code field is missing");
+        if (!subject_code)
+            throw new Error("Subject_code field is missing");
 
-        const [existedClass] = await class_model.getClassbyClass_code(class_code);
+        const [existedSubject] = await subjectModel.getSubjectByCourseCode(subject_code); //kiem tra subject co ton tai k
+        if (!existedSubject.length)
+            throw new Error("This subject is not existed");
+        const [existedClass] = await classModel.verifyExistedClass(class_code, examination_id, subject_code);
         if (existedClass.length)
-            throw new Error('Class is existed');
-        const [existedSubject] = await subject_model.getSubjectbyid(subject_id);//kiem tra subject co ton tai k
-        if (!existedClass.length)
-            throw new Error('subject is not existed');
-        const [existedExam] = await exam_model.getExambyid(examination_id);//kiem tra exam ton tai k
-        if (!existedExam.length)
-            throw new Error('examination is not existed');//
+            throw new Error("This class is existed");
 
-        await class_model.createClass(class_code, examination_id, subject_id);
+        await classModel.createClass(class_code, examination_id, subject_code);
+
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
+}
 
-};
-
-
-async function deleteClasses(req, res) {
-    const {
-        id
-    } = req.body;
-
-
+async function getInformation(req, res) {
+    const {id} = req.query;
     try {
-
-        if (!id) throw new Error('id field is missing');
-
-        id.forEach(element => deleteExambyId(element));
-
-        res.json(responseUtil.success({data: {}}));
+        if (!id)
+            throw new Error("Id field is missing");
+        const [existedClass] = await classModel.getClassById(id);
+        if (!existedClass.length)
+            throw new Error("This class is not existed");
+        let [rows] = await classModel.getClassById(id);
+        rows = rows[0];
+        res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
+}
 
-};
+async function getAllClass(req, res) {
+    const {examination_id} = req.tokenData;
+    try {
+        let {page, pageSize} = req.query;
+        if (!page) page = 1;
+        if (!pageSize) pageSize = 20;
+        const offset = (page - 1) * pageSize;
+        const limit = Number(pageSize);
 
-async function deleteExambyId(id) {
-    await class_model.deleteClassbyId(id);
-};
+        const [rows] = await classModel.getAllClass(examination_id, offset, limit);
 
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
 
 async function updateClass(req, res) {
     const {
         id,
         class_code,
-        examination_id,
-        subject_id
+        subject_code
     } = req.body;
 
     try {
         if (!class_code)
-            throw new Error('class_code field is missing');
-        if (!examination_id)
-            throw new Error('examination_id field is missing');
-        if (!subject_id)
-            throw new Error('subject_id field is missing');
+            throw new Error("Class_code field is missing");
+        if (!subject_code)
+            throw new Error("Subject_code field is missing");
         if (!id)
-            throw new Error('id field is missing');
+            throw new Error("Id field is missing");
 
-        const [existed] = await class_model.getClassbyid(id);
-        if (!existed.length)
-            throw new Error('have not created');
-        const [existedSubject] = await subject_model.getSubjectbyid(subject_id);//kiem tra subject co ton tai k
+        const [existedSubject] = await subjectModel.getSubjectByCourseCode(subject_code);//kiem tra subject co ton tai k
+        if (!existedSubject.length)
+            throw new Error("This subject is not existed");
+        const [existedClass] = await classModel.getClassById(id);
         if (!existedClass.length)
-            throw new Error('subject is not existed');
-        const [existedExam] = await exam_model.getExambyid(examination_id);//kiem tra exam ton tai k
-        if (!existedExam.length)
-            throw new Error('examination is not existed');//
+            throw new Error("This class is not existed in this examination");
 
-        await class_model.updateClass(id, class_code, examination_id, subject_id);
+        await classModel.updateClass(id, class_code, subject_code);
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
-
 }
 
-async function getAllClass(req, res) {
-
+async function deleteClasses(req, res) {
+    const {id} = req.query;
     try {
-        [exams] = await class_model.getAllClass();
-        res.json(responseUtil.success({data: {classes: [exams]}}
-            )
-        );
+        if (!id)
+            throw new Error("Id field is missing");
+        let existedClasses = [];
+        let notExistedClasses = [];
+        for (let i = 0; i < id.length; i++) {
+            console.log(id[i]);
+            const [existedClass] = await classModel.getClassById(id[i]);
+            console.log(existedClasses);
+            if (existedClass.length)
+                existedClasses.push(id[i]);
+            else
+                notExistedClasses.push(id[i]);
+        }
+        for (let i = 0; i < existedClasses.length; i++) {
+            await classModel.deleteClassById(existedClasses[i]);
+        }
+        if (notExistedClasses.length)
+            throw new Error("These classes is not existed: " + JSON.stringify(notExistedClasses));
+        res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
+};
 
-}
-
-async function getClassbyKeyword(req, res) {
-    const {
-        keywords
-    } = req.query;
-
+async function deleteClass(req, res) {
+    const {id} = req.query;
     try {
-        if (!keywords)
-            throw new Error('keywords querry is missing');
+        if (!id) throw new Error("Id field is missing");
 
-        [classes] = await subject.getClassbyKeyWord(keywords)
-        res.json(responseUtil.success({data: {classes: classes}}
-            )
-        );
+        const [existedClass] = await classModel.getClassById(id);
+        if (!existedClass.length)
+            throw new Error("This class is not existed in this examination");
+        await classModel.deleteClassById(id);
+
+        res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
+};
 
+async function getClassByKeyword(req, res) {
+    const {examination_id} = req.tokenData;
+    const {keywords} = req.query;
+    try {
+        let {page, pageSize} = req.query;
+        if (!page) page = 1;
+        if (!pageSize) pageSize = 20;
+        const offset = (page - 1) * pageSize;
+        const limit = Number(pageSize);
+
+        let classes = [];
+
+        if (keywords)
+            [classes] = await classModel.getClassByKeyWord(examination_id, offset, limit, keywords);
+        else
+            [classes] = await classModel.getAllClass(examination_id, offset, limit);
+
+        res.json(responseUtil.success({data: {classes: classes}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
 }
 
 module.exports = {
+    importClasses,
     createClass,
+    deleteClass,
     deleteClasses,
     getAllClass,
     updateClass,
-    getClassbyKeyword
+    getClassByKeyword,
+    getInformation
 };
