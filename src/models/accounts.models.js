@@ -51,10 +51,11 @@ async function getAllAdmin(offset, limit) {
     return [rows];
 }
 
-async function updateInformation(id, fullname, date_of_birth) {
+async function updateInformation(id, fullname, date_of_birth, email) {
     await dbPool.query(`UPDATE accounts
                             SET fullname = "${fullname}",
-                                date_of_birth = ${date_of_birth}
+                                date_of_birth = ${date_of_birth},
+                                email = "${email}"
                             WHERE id = ${id}`);
 }
 
