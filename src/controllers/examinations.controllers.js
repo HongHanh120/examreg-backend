@@ -39,13 +39,7 @@ async function getInformation(req, res) {
 
 async function getAllExaminations(req, res) {
     try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
-        [exams] = await examination.getAllExaminations(offset, limit);
+        [exams] = await examination.getAllExaminations();
         res.json(responseUtil.success({data: {exams: [exams]}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -93,17 +87,11 @@ async function deleteExamination(req, res) {
 async function getExaminationByKeyword(req, res) {
     const {keywords} = req.query;
     try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
         let rows = [];
         if (keywords)
-            [rows] = await examination.getExaminationByKeyword(offset, limit, keywords);
+            [rows] = await examination.getExaminationByKeyword(keywords);
         else
-            [rows] = await examination.getAllExaminations(offset, limit);
+            [rows] = await examination.getAllExaminations();
         res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));

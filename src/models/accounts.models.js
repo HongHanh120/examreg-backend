@@ -33,21 +33,17 @@ async function updatePassword(id, new_password) {
                             WHERE id = ${id}`);
 }
 
-async function getAllStudent(offset, limit) {
+async function getAllStudent() {
     const [rows] = await dbPool.query(`SELECT username, fullname, date_of_birth, course_class, email
                                         FROM accounts
-                                        WHERE role_id = 2
-                                        LIMIT ${limit}
-                                        OFFSET ${offset}`);
+                                        WHERE role_id = 2`);
     return [rows];
 }
 
-async function getAllAdmin(offset, limit) {
+async function getAllAdmin() {
     const [rows] = await dbPool.query(`SELECT username, fullname, date_of_birth, course_class, email, role_id
                                         FROM accounts
-                                        WHERE role_id = 1 OR role_id = 3
-                                        LIMIT ${limit}
-                                        OFFSET ${offset}`);
+                                        WHERE role_id = 1 OR role_id = 3`);
     return [rows];
 }
 

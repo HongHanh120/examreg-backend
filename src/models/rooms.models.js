@@ -26,11 +26,9 @@ async function updateRoom(id, name, slot) {
                         WHERE id = ${id}`);
 }
 
-async function getAllRoom(offset, limit){
+async function getAllRoom(){
     const [rows] = await dbPool.query(`SELECT *
-                                       FROM rooms
-                                       LIMIT ${limit}
-                                       OFFSET ${offset}`);
+                                       FROM rooms}`);
     return [rows];
 }
 

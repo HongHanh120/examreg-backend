@@ -43,11 +43,9 @@ async function deleteById(id) {
                             WHERE id = ${id}`);
 }
 
-async function getAll(offset, limit) {
+async function getAll() {
     const [rows] = await dbPool.query(`SELECT * 
-                                        FROM shifts_rooms
-                                        LIMIT ${limit}
-                                        OFFSET ${offset}`);
+                                        FROM shifts_rooms`);
     return [rows];
 }
 
