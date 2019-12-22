@@ -33,9 +33,12 @@ async function importClassesStudents(req, res) {
             class_student.class_code_id = rows[0].id;
 
             const [existedStudent] =
-                await classStudent.verifyDuplication(class_student.student_code, class_student.class_code_id, examination_id);
+                await classStudent.verifyDuplication(class_student.student_code,
+                                                    class_student.class_code_id,
+                                                    examination_id);
             const [existedSubject] =
-                await classStudent.checkSubjectCode(class_student.student_code, subject_code, examination_id);
+                await classStudent.checkSubjectCode(class_student.student_code,
+                                                    subject_code, examination_id);
 
             if (existedStudent.length)
                 existedElements.push({class_student});

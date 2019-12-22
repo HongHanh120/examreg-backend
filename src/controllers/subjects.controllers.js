@@ -96,15 +96,15 @@ async function getSubjectByKeyword(req, res) {
 
 async function getInformation(req, res) {
     const {subjectCode} = req.query;
-    console.log(subjectCode);
     try {
         if (!subjectCode)
             throw new Error("Subject-code field is missing");
+
         let [existedSubject] = await subject.getSubjectByCourseCode(subjectCode);
-        console.log(existedSubject);
         if (!existedSubject.length)
             throw new Error("This subject is not existed");
         existedSubject = existedSubject[0];
+
         res.json(responseUtil.success({data: {existedSubject}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -147,6 +147,18 @@ async function importSubjects(req, res) {
     }
 }
 
+async function getSubjectsInExam(req, res) {
+    const {examination_id} = req.tokenData;
+    try {
+        let [subjects] = await subject.getSubjects(examination_id);
+        console.log(subjects);
+
+        res.json(responseUtil.success({data: {subjects}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
 module.exports = {
     createSubject,
     updateSubject,
@@ -154,5 +166,6 @@ module.exports = {
     getAllSubject,
     getSubjectByKeyword,
     getInformation,
-    importSubjects
+    importSubjects,
+    getSubjectsInExam
 };

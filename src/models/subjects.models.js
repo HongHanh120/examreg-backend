@@ -40,11 +40,21 @@ async function findSubjectByKeyword(keywords) {
     return [rows];
 }
 
+async function getSubjects(examination_id) {
+    const [rows] = await dbPool.query(`SELECT subjects.*
+                                 FROM subjects
+                                 INNER JOIN classes ON subjects.subject_code = classes.subject_code
+                                 WHERE classes.examination_id = ${examination_id}
+                                 GROUP BY(subjects.subject_code)`);
+    return [rows];
+}
+
 module.exports = {
     deleteSubjectById,
     updateSubject,
     createSubject,
     getSubjectByCourseCode,
     getAllSubjects,
-    findSubjectByKeyword
+    findSubjectByKeyword,
+    getSubjects
 };
