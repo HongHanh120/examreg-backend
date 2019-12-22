@@ -98,7 +98,13 @@ async function updateSubject(req, res) {
 
 async function getAllSubject(req, res) {
     try {
-        [subjects] = await subject.getAllSubjects();
+        let {page, pageSize} = req.query;
+        if (!page) page = 1;
+        if (!pageSize) pageSize = 20;
+        const offset = (page - 1) * pageSize;
+        const limit = Number(pageSize);
+
+        [subjects] = await subject.getAllSubjects(offset, limit);
         res.json(responseUtil.success({data: {subjects: subjects}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -108,11 +114,19 @@ async function getAllSubject(req, res) {
 async function getSubjectByKeyword(req, res) {
     const {keywords} = req.query;
     try {
-        if (!keywords)
-            throw new Error("Keywords is missing");
+        let {page, pageSize} = req.query;
+        if (!page) page = 1;
+        if (!pageSize) pageSize = 20;
+        const offset = (page - 1) * pageSize;
+        const limit = Number(pageSize);
 
-        const [subjects] = await subject.findSubjectByKeyword(keywords);
-        res.json(responseUtil.success({data: {subjects: subjects}}));
+        let results = [];
+        if (keywords)
+            [results] = await subject.findSubjectByKeyword(offset, limit, keywords);
+        else
+            [results] = await subject.getAllSubjects(offset, limit);
+
+        res.json(responseUtil.success({data: {subjects: results}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }

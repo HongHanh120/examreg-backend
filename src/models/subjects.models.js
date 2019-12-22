@@ -26,18 +26,21 @@ async function getSubjectByCourseCode(subject_code) {
     return [rows];
 }
 
-async function getAllSubjects() {
+async function getAllSubjects(offset, limit) {
     const [rows] = await dbPool.query(`SELECT * 
-                                       FROM subjects`);
+                                       FROM subjects
+                                       LIMIT ${limit}
+                                       OFFSET ${offset}`);
     return [rows];
 }
 
-async function findSubjectByKeyword(keywords) {
+async function findSubjectByKeyword(offet, limit, keywords) {
     const [rows] = await dbPool.query(`SELECT subjects.name, subjects.subject_code
                                        FROM subjects
                                        WHERE MATCH(name) AGAINST("+${keywords}*" IN boolean MODE)
                                        OR MATCH(subject_code) AGAINST("+${keywords}*" IN boolean MODE)
-                                       LIMIT 10`);
+                                       LIMIT ${limit}
+                                       OFFSET ${offet}`);
     return [rows];
 }
 

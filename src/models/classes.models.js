@@ -21,9 +21,11 @@ async function getClassById(id) {
     return [rows];
 }
 
-async function getAllClass(examination_id) {
+async function getAllClass(examination_id, offset, limit) {
     const [rows] = await dbPool.query(`SELECT * FROM classes
-                                        WHERE examination_id = ${examination_id}`);
+                                        WHERE examination_id = ${examination_id}
+                                        LIMIT ${limit}
+                                        OFFSET ${offset}`);
     return [rows];
 }
 
@@ -39,13 +41,14 @@ async function updateClass(id, class_code, subject_code) {
                         WHERE id = ${id}`);
 }
 
-async function getClassByKeyWord(keywords) {
+async function getClassByKeyWord(examination_id, offset, limit, keywords) {
     const [rows] = await dbPool.query(`SELECT subjects.name, subjects.subject_code, classes.class_code, classes.examination_id
                                        FROM classes
                                        INNER JOIN subjects ON classes.subject_code = subjects.subject_code
                                        WHERE MATCH(subjects.name) AGAINST('+${keywords}*' IN boolean MODE)
                                        OR MATCH(subjects.subject_code) AGAINST('+${keywords}*' IN boolean MODE)
-                                       LIMIT 10`);
+                                       LIMIT ${limit}
+                                       OFFSET ${offset}`);
     return [rows];
 }
 

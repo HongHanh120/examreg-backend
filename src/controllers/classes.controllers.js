@@ -72,10 +72,10 @@ async function createClass(req, res) {
 async function getInformation(req, res) {
     const {id} = req.query;
     try {
-        if(!id)
+        if (!id)
             throw new Error("Id field is missing");
         const [existedClass] = await classModel.getClassById(id);
-        if(!existedClass.length)
+        if (!existedClass.length)
             throw new Error("This class is not existed");
         let [rows] = await classModel.getClassById(id);
         rows = rows[0];
@@ -88,7 +88,14 @@ async function getInformation(req, res) {
 async function getAllClass(req, res) {
     const {examination_id} = req.tokenData;
     try {
-        const [rows] = await classModel.getAllClass(examination_id);
+        let {page, pageSize} = req.query;
+        if (!page) page = 1;
+        if (!pageSize) pageSize = 20;
+        const offset = (page - 1) * pageSize;
+        const limit = Number(pageSize);
+
+        const [rows] = await classModel.getAllClass(examination_id, offset, limit);
+
         res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -134,7 +141,7 @@ async function deleteClasses(req, res) {
         for (let i = 0; i < id.length; i++) {
             console.log(id[i]);
             const [existedClass] = await classModel.getClassById(id[i]);
-            console.log(existedClasses)
+            console.log(existedClasses);
             if (existedClass.length)
                 existedClasses.push(id[i]);
             else
@@ -143,7 +150,7 @@ async function deleteClasses(req, res) {
         for (let i = 0; i < existedClasses.length; i++) {
             await classModel.deleteClassById(existedClasses[i]);
         }
-        if(notExistedClasses.length)
+        if (notExistedClasses.length)
             throw new Error("These classes is not existed: " + JSON.stringify(notExistedClasses));
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
@@ -168,12 +175,22 @@ async function deleteClass(req, res) {
 };
 
 async function getClassByKeyword(req, res) {
+    const {examination_id} = req.tokenData;
     const {keywords} = req.query;
     try {
-        if (!keywords)
-            throw new Error("Keywords is missing");
+        let {page, pageSize} = req.query;
+        if (!page) page = 1;
+        if (!pageSize) pageSize = 20;
+        const offset = (page - 1) * pageSize;
+        const limit = Number(pageSize);
 
-        let [classes] = await classModel.getClassByKeyWord(keywords);
+        let classes = [];
+
+        if (keywords)
+            [classes] = await classModel.getClassByKeyWord(examination_id, offset, limit, keywords);
+        else
+            [classes] = await classModel.getAllClass(examination_id, offset, limit);
+
         res.json(responseUtil.success({data: {classes: classes}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
