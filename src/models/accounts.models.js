@@ -79,7 +79,7 @@ async function getRole(username) {
     return [rows];
 }
 
-async function getUserByKeyword(keywords, role_id){
+async function getUserByKeyword(keywords, role_id) {
     const [rows] = await dbPool.query(`SELECT id, username, fullname, course_class, date_of_birth, email
                                        FROM accounts
                                        WHERE (MATCH(fullname) AGAINST("+${keywords}*" IN boolean MODE)
@@ -90,13 +90,30 @@ async function getUserByKeyword(keywords, role_id){
     return [rows];
 }
 
-async function getNotEligibilityStudent() {
-    // const [rows] = await dbPool.query(`SELECT accounts.id, accounts.username, accounts.fullname, accounts.course_class,
-    //                                                classes_students.class_code_id,
-    //                                         FROM accounts
-    //                                         INNER JOIN classes_students ON accounts.id = classes_students.account_id
-    //                                         INNER JOIN classes
-    //                                         WHERE `)
+async function getNotEligibleStudent(examination_id) {
+    const [rows] = await dbPool.query(`SELECT accounts.id, accounts.username, accounts.fullname, accounts.course_class,
+                                                   classes_students.class_code_id, subjects.name
+                                            FROM accounts
+                                            INNER JOIN classes_students ON accounts.id = classes_students.account_id
+                                            INNER JOIN classes ON classes.id = classes_students.class_code_id
+                                            INNER JOIN subjects ON subjects.subject_code = classes.subject_code
+                                            WHERE classes.examination_id = ${examination_id} AND classes_students.eligibility = 0`);
+    return [rows];
+}
+
+async function findNotEligibleStudent(examination_id, keywords) {
+    const [rows] = await dbPool.query(`SELECT accounts.id, accounts.username, accounts.fullname, accounts.course_class,
+                                                   classes_students.class_code_id, subjects.name, classes_students.eligibility
+                                            FROM accounts
+                                            INNER JOIN classes_students ON accounts.id = classes_students.account_id
+                                            INNER JOIN classes ON classes.id = classes_students.class_code_id
+                                            INNER JOIN subjects ON subjects.subject_code = classes.subject_code
+                                            WHERE (MATCH(fullname) AGAINST("+${keywords}*" IN boolean MODE)
+                                            OR MATCH(username) AGAINST("+${keywords}*" IN boolean MODE)
+                                            OR MATCH(course_class) AGAINST("+${keywords}*" IN boolean MODE)
+                                            OR MATCH(email) AGAINST("+${keywords}*" IN boolean MODE))
+                                            AND classes.examination_id = ${examination_id} AND classes_students.eligibility = 0`);
+    return [rows];
 }
 
 module.exports = {
@@ -112,7 +129,9 @@ module.exports = {
     deleteUserById,
     changeRole,
     getRole,
-    getUserByKeyword
+    getUserByKeyword,
+    getNotEligibleStudent,
+    findNotEligibleStudent
 };
 
 

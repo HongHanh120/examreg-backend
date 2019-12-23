@@ -5,6 +5,7 @@ const responseUtil = require("../utils/response.util");
 
 const account = require("../models/accounts.models");
 const examination = require("../models/examinations.models");
+const subjectClass = require("../models/classes.models");
 
 async function login(req, res) {
     const {
@@ -227,6 +228,32 @@ async function getAllAccount(req, res) {
     }
 }
 
+async function getAllNotEligibleStudents(req, res) {
+    const {examination_id} = req.tokenData;
+    try {
+        let rows = [];
+        let [notEligibleStudents] = await account.getNotEligibleStudent(examination_id);
+        for (let i = 0; i < notEligibleStudents.length; i++) {
+            let id = notEligibleStudents[0].id;
+            let username = notEligibleStudents[0].username;
+            let fullname = notEligibleStudents[0].fullname;
+            let course_class = notEligibleStudents[0].course_class;
+            let nameSubject = notEligibleStudents[0].name;
+
+            let [subjectClassInf] = await subjectClass.getClassById(notEligibleStudents[i].class_code_id);
+            let subject_code = subjectClassInf[0].subject_code;
+            let class_code = subjectClassInf[0].class_code;
+            let subject_class = subject_code + " " + class_code.toString();
+
+            let row = {id, username, fullname, course_class, subject_class, nameSubject};
+            rows.push(row);
+        }
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
 module.exports = {
     login,
     register,
@@ -235,5 +262,6 @@ module.exports = {
     getCurrentExaminationToken,
     updateInformation,
     deleteUser,
-    getAllAccount
+    getAllAccount,
+    getAllNotEligibleStudents
 };
