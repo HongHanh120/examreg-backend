@@ -21,4 +21,8 @@ router.get("/examreg",
     examinationToken.verify,
     studentController.getSubjectOfRegister);
 
+router.post("/examreg",
+    examinationToken.verify,
+    studentController.registerExam);
+
 module.exports = router;

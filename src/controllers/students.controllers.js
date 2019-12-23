@@ -87,19 +87,44 @@ async function registerExam(req, res) {
     const {examination_id, id} = req.tokenData;
     const {shift_room_id} = req.body;
     try {
-
         if (!shift_room_id)
             throw new Error("Shift_room_id field is missing");
 
         let [existedShiftRoom] = await shift_room.getShiftRoomById(shift_room_id);
         if (!existedShiftRoom.length)
-            throw new Error("Shift_room is not existed");
+            throw new Error("This shift_room is not existed");
+        let subject_code = existedShiftRoom[0].subject_code;
+        let slot = existedShiftRoom[0].current_slot;
+
         let [existedStudent] = await class_student.getStudentByAccountId(id);
         if (!existedStudent.length)
             throw new Error("Student is not existed");
+        const student_id = existedStudent[0].id;
 
+        let [registeredSubject] = await shift_room_student.getSubjectInReg(id, examination_id);
+        for (let i = 0; i < registeredSubject.length; i++) {
+            if (registeredSubject[i].id === shift_room_id ||
+                registeredSubject[i].subject_code === subject_code)
+                throw new Error("This subject is registered");
+        }
+        let current_slot = await shift_room_student.getCurrentSlot(shift_room_id);
+        if(current_slot >= slot)
+            throw new Error("This room is full");
 
-        res.json(responseUtil.success({data: {information, subjects}}));
+        const [subject] = await class_student.getASubject(examination_id, id, subject_code);
+        if(!subject.length)
+            throw new Error("This subject is not invalid");
+
+        const [checkEligibility] = await account.getNotEligibleStudent(examination_id);
+        for(let i = 0; i < checkEligibility.length; i++){
+            let account_id = checkEligibility[i].id;
+            let subjectCode = checkEligibility[i].subject_code;
+            if(account_id === id && subject_code === subjectCode)
+                throw new Error("You is blocked to register this subject")
+        }
+
+        await shift_room_student.create(shift_room_id, student_id);
+        res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
