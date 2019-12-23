@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const token = require("../middlewares/tokenLogin.middlewares");const privilege = require("../middlewares/privilege.middlewares");
+const token = require("../middlewares/tokenLogin.middlewares");
+const privilege = require("../middlewares/privilege.middlewares");
 const examinationToken = require("../middlewares/tokenExamination.middlewares");
 const multerMiddleware = require("../middlewares/multer.middlewares");
 
@@ -16,5 +17,9 @@ router.get("/",
     examinationToken.verify,
     privilege.verify(2),
     classStudentController.getStudentsOfClass);
+
+router.get("/information",
+    examinationToken.verify,
+    classStudentController.getSubjectsOfStudent);
 
 module.exports = router;

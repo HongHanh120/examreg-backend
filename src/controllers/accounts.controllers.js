@@ -234,11 +234,11 @@ async function getAllNotEligibleStudents(req, res) {
         let rows = [];
         let [notEligibleStudents] = await account.getNotEligibleStudent(examination_id);
         for (let i = 0; i < notEligibleStudents.length; i++) {
-            let id = notEligibleStudents[0].id;
-            let username = notEligibleStudents[0].username;
-            let fullname = notEligibleStudents[0].fullname;
-            let course_class = notEligibleStudents[0].course_class;
-            let nameSubject = notEligibleStudents[0].name;
+            let id = notEligibleStudents[i].id;
+            let username = notEligibleStudents[i].username;
+            let fullname = notEligibleStudents[i].fullname;
+            let course_class = notEligibleStudents[i].course_class;
+            let nameSubject = notEligibleStudents[i].name;
 
             let [subjectClassInf] = await subjectClass.getClassById(notEligibleStudents[i].class_code_id);
             let subject_code = subjectClassInf[0].subject_code;
