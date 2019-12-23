@@ -101,18 +101,25 @@ async function getNotEligibleStudent(examination_id) {
     return [rows];
 }
 
-async function findNotEligibleStudent(examination_id, keywords) {
-    const [rows] = await dbPool.query(`SELECT accounts.id, accounts.username, accounts.fullname, accounts.course_class,
-                                                   classes_students.class_code_id, subjects.name, classes_students.eligibility
-                                            FROM accounts
-                                            INNER JOIN classes_students ON accounts.id = classes_students.account_id
-                                            INNER JOIN classes ON classes.id = classes_students.class_code_id
-                                            INNER JOIN subjects ON subjects.subject_code = classes.subject_code
-                                            WHERE (MATCH(fullname) AGAINST("+${keywords}*" IN boolean MODE)
-                                            OR MATCH(username) AGAINST("+${keywords}*" IN boolean MODE)
-                                            OR MATCH(course_class) AGAINST("+${keywords}*" IN boolean MODE)
-                                            OR MATCH(email) AGAINST("+${keywords}*" IN boolean MODE))
-                                            AND classes.examination_id = ${examination_id} AND classes_students.eligibility = 0`);
+// async function findNotEligibleStudent(examination_id, keywords) {
+//     const [rows] = await dbPool.query(`SELECT accounts.id, accounts.username, accounts.fullname, accounts.course_class,
+//                                                    classes_students.class_code_id, subjects.name, classes_students.eligibility
+//                                             FROM accounts
+//                                             INNER JOIN classes_students ON accounts.id = classes_students.account_id
+//                                             INNER JOIN classes ON classes.id = classes_students.class_code_id
+//                                             INNER JOIN subjects ON subjects.subject_code = classes.subject_code
+//                                             WHERE (MATCH(fullname) AGAINST("+${keywords}*" IN boolean MODE)
+//                                             OR MATCH(username) AGAINST("+${keywords}*" IN boolean MODE)
+//                                             OR MATCH(course_class) AGAINST("+${keywords}*" IN boolean MODE)
+//                                             OR MATCH(email) AGAINST("+${keywords}*" IN boolean MODE))
+//                                             AND classes.examination_id = ${examination_id} AND classes_students.eligibility = 0`);
+//     return [rows];
+// }
+
+async function getInformation(id){
+    const [rows] = await dbPool.query(`SELECT id, username, fullname, date_of_birth, course_class, email
+                                        FROM accounts
+                                        WHERE id = ${id}`);
     return [rows];
 }
 
@@ -131,7 +138,8 @@ module.exports = {
     getRole,
     getUserByKeyword,
     getNotEligibleStudent,
-    findNotEligibleStudent
+    getInformation
+    // findNotEligibleStudent
 };
 
 

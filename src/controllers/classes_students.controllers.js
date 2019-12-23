@@ -34,11 +34,11 @@ async function importClassesStudents(req, res) {
 
             const [existedStudent] =
                 await classStudent.verifyDuplication(class_student.student_code,
-                                                    class_student.class_code_id,
-                                                    examination_id);
+                    class_student.class_code_id,
+                    examination_id);
             const [existedSubject] =
                 await classStudent.checkSubjectCode(class_student.student_code,
-                                                    subject_code, examination_id);
+                    subject_code, examination_id);
 
             if (existedStudent.length)
                 existedElements.push({class_student});
@@ -68,8 +68,37 @@ async function getStudentsOfClass(req, res) {
         if (!class_code_id)
             throw new Error("Class_code_id field is missing");
 
-        const [rows] = await classStudent.getStudentInClass(examination_id, class_code_id);
+        const [rows] = await classStudent.getStudentsInClass(examination_id, class_code_id);
         res.json(responseUtil.success({data: {rows}}));
+
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function getSubjectsOfStudent(req, res) {
+    const {id} = req.tokenData;
+    const {examination_id} = req.tokenData;
+    try {
+        if (!id)
+            throw new Error("Id field is missing");
+
+        let [existedStudent] = await classStudent.getStudentByAccountId(id);
+        if (!existedStudent.length)
+            throw new Error("Student is not existed");
+
+        let [information] = await account.getInformation(id);
+
+
+        let subjects = [];
+        if (examination_id){
+            let [rows] = await classStudent.getSubject(examination_id, id);
+            if(rows.length)
+                for(let i = 0; i < rows.length; i++)
+                    subjects.push(rows[i])
+
+        }
+        res.json(responseUtil.success({data: {information, subjects}}));
 
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -78,5 +107,6 @@ async function getStudentsOfClass(req, res) {
 
 module.exports = {
     importClassesStudents,
-    getStudentsOfClass
+    getStudentsOfClass,
+    getSubjectsOfStudent
 };
