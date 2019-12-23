@@ -4,6 +4,9 @@ const brcypt = require("bcrypt");
 const fs = require("fs");
 
 const account = require("../models/accounts.models");
+const classes = require("../models/classes.models");
+const class_student = require("../models/classes_students.models");
+const shift_room_student = require("../models/shifts_rooms_students.models");
 
 async function importStudents(req, res) {
     const file = req.file;
@@ -64,11 +67,27 @@ async function getStudentList(req, res) {
     }
 }
 
-async function getSubjectsOfStudent(req, res) {
+async function getSubjectOfRegister(req, res) {
     const {examination_id, id} = req.tokenData;
     try {
+        let [existedStudent] = await class_student.getStudentByAccountId(id);
+        if (!existedStudent.length)
+            throw new Error("Student is not existed");
 
-        res.json(responseUtil.success({data: {}}));
+        const [result] = await shift_room_student.getSubjectInReg(id, examination_id);
+
+            res.json(responseUtil.success({data: {result}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function registerExam(req, res) {
+    const {examination_id, id} = req.tokenData;
+    const {shift_room_id} = req.body;
+    try {
+
+        res.json(responseUtil.success({data: {information, subjects}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
@@ -76,5 +95,7 @@ async function getSubjectsOfStudent(req, res) {
 
 module.exports = {
     importStudents,
-    getStudentList
+    getStudentList,
+    getSubjectOfRegister,
+    registerExam
 };

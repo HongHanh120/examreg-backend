@@ -80,9 +80,6 @@ async function getSubjectsOfStudent(req, res) {
     const {id} = req.tokenData;
     const {examination_id} = req.tokenData;
     try {
-        if (!id)
-            throw new Error("Id field is missing");
-
         let [existedStudent] = await classStudent.getStudentByAccountId(id);
         if (!existedStudent.length)
             throw new Error("Student is not existed");
@@ -102,7 +99,6 @@ async function getSubjectsOfStudent(req, res) {
             let subject = {subject_code, name, subject_class, credit, eligibility};
             subjects.push(subject);
         }
-
         res.json(responseUtil.success({data: {information, subjects}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
