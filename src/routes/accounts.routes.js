@@ -41,4 +41,9 @@ router.get("/",
     privilege.verify(2),
     accountController.getAllAccount);
 
+router.get("/eligibility",
+    examination_token.verify,
+    privilege.verify(2),
+    accountController.getAllNotEligibleStudents);
+
 module.exports = router;

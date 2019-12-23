@@ -37,17 +37,19 @@ async function updateRoom(req, res) {
         if (!slot)
             throw new Error("Slot field is missing");
 
-        const [existedRoom] = await room.getRoomById(id);
-        console.log(existedRoom)
+        let [existedRoom] = await room.getRoomById(id);
         if (!existedRoom.length)
             throw new Error("This room is not existed");
 
-        const [duplication] = await room.getRoomByName(name);
-        if (duplication.length)
-            throw new Error("This room is existed");
-
-        await room.updateRoom(id, name, slot);
-
+        let oldName = existedRoom[0].name;
+        if (oldName === name) {
+            await room.updateRoom(id, name, slot);
+        } else {
+            const [duplication] = await room.getRoomByName(name);
+            if (duplication.length)
+                throw new Error("This room is existed");
+            await room.updateRoom(id, name, slot);
+        }
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
