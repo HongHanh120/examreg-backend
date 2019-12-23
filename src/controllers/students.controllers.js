@@ -7,6 +7,7 @@ const account = require("../models/accounts.models");
 const classes = require("../models/classes.models");
 const class_student = require("../models/classes_students.models");
 const shift_room_student = require("../models/shifts_rooms_students.models");
+const shift_room = require("../models/shifts_rooms.models");
 
 async function importStudents(req, res) {
     const file = req.file;
@@ -76,7 +77,7 @@ async function getSubjectOfRegister(req, res) {
 
         const [result] = await shift_room_student.getSubjectInReg(id, examination_id);
 
-            res.json(responseUtil.success({data: {result}}));
+        res.json(responseUtil.success({data: {result}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
@@ -86,6 +87,17 @@ async function registerExam(req, res) {
     const {examination_id, id} = req.tokenData;
     const {shift_room_id} = req.body;
     try {
+
+        if (!shift_room_id)
+            throw new Error("Shift_room_id field is missing");
+
+        let [existedShiftRoom] = await shift_room.getShiftRoomById(shift_room_id);
+        if (!existedShiftRoom.length)
+            throw new Error("Shift_room is not existed");
+        let [existedStudent] = await class_student.getStudentByAccountId(id);
+        if (!existedStudent.length)
+            throw new Error("Student is not existed");
+
 
         res.json(responseUtil.success({data: {information, subjects}}));
     } catch (err) {
