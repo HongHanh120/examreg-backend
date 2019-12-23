@@ -89,17 +89,21 @@ async function getSubjectsOfStudent(req, res) {
 
         let [information] = await account.getInformation(id);
 
-
         let subjects = [];
-        if (examination_id){
-            let [rows] = await classStudent.getSubject(examination_id, id);
-            if(rows.length)
-                for(let i = 0; i < rows.length; i++)
-                    subjects.push(rows[i])
+        let [rows] = await classStudent.getSubject(examination_id, id);
+        for (let i = 0; i < rows.length; i++) {
+            let subject_code = rows[i].subject_code;
+            let name = rows[i].name;
+            let class_code = rows[i].class_code;
+            let credit = rows[i].credit;
+            let eligibility = rows[i].eligibility;
 
+            let subject_class = subject_code + " " + class_code.toString();
+            let subject = {subject_code, name, subject_class, credit, eligibility};
+            subjects.push(subject);
         }
-        res.json(responseUtil.success({data: {information, subjects}}));
 
+        res.json(responseUtil.success({data: {information, subjects}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
