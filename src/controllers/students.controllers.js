@@ -51,8 +51,13 @@ async function importStudents(req, res) {
 }
 
 async function getStudentList(req, res) {
+    const {keywords} = req.query;
     try {
-        const [rows] = await account.getAllStudent();
+        let rows = [];
+        if (keywords)
+            [rows] = await account.getUserByKeyword(keywords, 2);
+        else
+            [rows] = await account.getAllStudent();
         res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));

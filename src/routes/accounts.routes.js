@@ -36,4 +36,9 @@ router.delete("/",
     role.verify,
     accountController.deleteUser);
 
+router.get("/",
+    token.verify,
+    privilege.verify(2),
+    accountController.getAllAccount);
+
 module.exports = router;

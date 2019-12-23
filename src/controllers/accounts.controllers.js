@@ -90,8 +90,19 @@ async function register(req, res) {
 }
 
 async function getAdminList(req, res) {
+    const {keywords} = req.query;
     try {
-        const [rows] = await account.getAllAdmin();
+        let rows = [];
+        if (keywords) {
+            let [admin] = await account.getUserByKeyword(keywords, 1);
+            let [superAdmin] = await account.getUserByKeyword(keywords, 3);
+            for (let i = 0; i < admin.length; i++)
+                rows.push(admin[i]);
+            for (let i = 0; i < superAdmin.length; i++)
+                rows.push(superAdmin[i]);
+            console.log(rows);
+        } else
+            [rows] = await account.getAllAdmin();
         res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -202,6 +213,20 @@ async function deleteUser(req, res) {
     }
 }
 
+async function getAllAccount(req, res) {
+    const {keywords} = req.query;
+    try {
+        let rows = [];
+        if (keywords)
+            [rows] = await account.getUserByKeyword(keywords, "");
+        else
+            [rows] = await account.getAllAccounts();
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
 module.exports = {
     login,
     register,
@@ -209,5 +234,6 @@ module.exports = {
     getAdminList,
     getCurrentExaminationToken,
     updateInformation,
-    deleteUser
+    deleteUser,
+    getAllAccount
 };
