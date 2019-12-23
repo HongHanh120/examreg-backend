@@ -90,6 +90,15 @@ async function getUserByKeyword(keywords, role_id){
     return [rows];
 }
 
+async function getNotEligibilityStudent() {
+    // const [rows] = await dbPool.query(`SELECT accounts.id, accounts.username, accounts.fullname, accounts.course_class,
+    //                                                classes_students.class_code_id,
+    //                                         FROM accounts
+    //                                         INNER JOIN classes_students ON accounts.id = classes_students.account_id
+    //                                         INNER JOIN classes
+    //                                         WHERE `)
+}
+
 module.exports = {
     getUserById,
     getUserByUsername,

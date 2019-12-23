@@ -28,7 +28,7 @@ async function updateRoom(id, name, slot) {
 
 async function getAllRoom(){
     const [rows] = await dbPool.query(`SELECT *
-                                       FROM rooms}`);
+                                       FROM rooms`);
     return [rows];
 }
 

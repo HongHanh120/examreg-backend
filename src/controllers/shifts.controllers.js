@@ -79,8 +79,9 @@ async function deleteShift(req, res) {
 }
 
 async function getAllShift(req, res) {
+    const {examination_id} = req.tokenData
     try {
-        [shifts] = await shift.getAllShifts();
+        [shifts] = await shift.getAllShifts(examination_id);
         res.json(responseUtil.success({data: {shifts}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));

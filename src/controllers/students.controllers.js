@@ -64,9 +64,14 @@ async function getStudentList(req, res) {
     }
 }
 
+async function getSubjectsOfStudent(req, res) {
+    const {examination_id, id} = req.tokenData;
+    try {
 
-async function getInformation(req, res) {
-
+        res.json(responseUtil.success({data: {}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
 }
 
 module.exports = {
