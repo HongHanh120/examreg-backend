@@ -167,8 +167,16 @@ async function getList(req, res) {
             let current_slot = rows[i].current_slot;
             let subject_code = rows[i].subject_code;
             let creator_id = rows[i].creator_id;
+            let room_name = rows[i].room_name;
+            let slot = rows[i].slot;
+            let shift_name = rows[i].shift_name;
+            let start_time = rows[i].start_time;
+            let time = rows[i].time;
+            let examination_id = rows[i].examination_id;
 
-            let row = {id, shift_id, room_id, current_slot, subject_code, creator_id, block, reg};
+            let row = {id, shift_id, room_id, current_slot, subject_code,
+                creator_id, room_name, slot, shift_name, start_time, time,
+                examination_id, block, reg};
             results.push(row);
         }
 

@@ -45,8 +45,9 @@ async function deleteById(id) {
 
 async function getAll() {
     const [rows] = await dbPool.query(`SELECT shifts_rooms.id, shifts_rooms.current_slot, shifts_rooms.subject_code, 
-                                            shifts_rooms.creator_id, rooms.name, rooms.slot, shifts.name, shifts.start_time,
-                                            shifts.time, shifts.examination
+                                            shifts_rooms.creator_id, rooms.name AS room_name, rooms.slot, 
+                                            shifts.name AS shift_name, shifts.start_time, shifts.time, 
+                                            shifts.examination_id, shifts.id AS shift_id, rooms.id AS room_id
                                         FROM shifts_rooms
                                         INNER JOIN shifts ON shifts_rooms.shift_id = shifts.id
                                         INNER JOIN rooms ON rooms.id = shifts_rooms.room_id`);

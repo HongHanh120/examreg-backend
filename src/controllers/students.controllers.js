@@ -130,6 +130,21 @@ async function registerExam(req, res) {
     }
 }
 
+async function deleteSubject(req, res){
+    const {examination_id, id} = req.tokenData;
+    try {
+        let [existedStudent] = await class_student.getStudentByAccountId(id);
+        if (!existedStudent.length)
+            throw new Error("Student is not existed");
+
+        const [result] = await shift_room_student.deleteById(id, examination_id);
+
+        res.json(responseUtil.success({data: {result}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
 module.exports = {
     importStudents,
     getStudentList,

@@ -1,2 +1,0 @@
-const dbPool = require("../db");
-
