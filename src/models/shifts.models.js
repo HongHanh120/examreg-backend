@@ -33,9 +33,10 @@ async function deleteShiftById(id) {
                         WHERE id = ${id}`);
 }
 
-async function getAllShifts() {
+async function getAllShifts(examination_id) {
     const [rows] = await dbPool.query(`SELECT * 
-                                       FROM shifts`);
+                                       FROM shifts
+                                       WHERE examination_id = ${examination_id}`);
     return [rows];
 }
 
