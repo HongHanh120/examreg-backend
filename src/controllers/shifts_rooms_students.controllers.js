@@ -64,7 +64,23 @@ async function deleteShiftRoomStudent(req, res) {
     }
 }
 
+async function getStudentOfShiftRoom(req, res){
+    const {examination_id, id} = req.tokenData;
+    const {shift_room_id} = req.query;
+    try {
+        if (!shift_room_id)
+            throw new Error("Shift_room_id field is missing");
+
+        const [rows] = await shift_room_student.getStudentInRoom(examination_id, shift_room_id);
+        res.json(responseUtil.success({data: {rows}}));
+
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
 module.exports = {
     create,
-    deleteShiftRoomStudent
+    deleteShiftRoomStudent,
+    getStudentOfShiftRoom
 };

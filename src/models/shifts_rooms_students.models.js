@@ -43,11 +43,24 @@ async function getAccountId(student_id) {
     return [rows];
 }
 
+async function getStudentInRoom(examination_id, shift_room_id){
+    const [rows] = await dbPool.query(`SELECT accounts.id, accounts.username, accounts.fullname, accounts.date_of_birth,
+                                              shifts_rooms.id
+                                      FROM shifts_rooms_students
+                                      INNER JOIN shifts_rooms ON shifts_rooms.id = shifts_rooms_students.shift_room_id
+                                      INNER JOIN classes_students ON shifts_rooms_students.student_id = classes_students.id
+                                      INNER JOIN accounts ON accounts.id = classes_students.account_id
+                                      INNER JOIN shifts ON shifts.id = shifts_rooms.shift_id
+                                      WHERE shifts_rooms.id = ${shift_room_id} AND shifts.examination_id = ${examination_id}`);
+    return [rows];
+}
+
 module.exports = {
     checkShiftRoom,
     checkExist,
     create,
     getById,
     deleteById,
-    getAccountId
+    getAccountId,
+    getStudentInRoom
 };
