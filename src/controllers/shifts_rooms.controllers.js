@@ -156,7 +156,23 @@ async function getList(req, res) {
     try {
         const [rows] = await shift_room.getAll(examination_id);
 
-        res.json(responseUtil.success({data: {rows, block:false, reg:false}}));
+        let block = false;
+        let reg = false;
+        let results = [];
+
+        for (let i = 0; i < rows.length; i++) {
+            let id = rows[i].id;
+            let shift_id = rows[i].shift_id;
+            let room_id = rows[i].room_id;
+            let current_slot = rows[i].current_slot;
+            let subject_code = rows[i].subject_code;
+            let creator_id = rows[i].creator_id;
+
+            let row = {id, shift_id, room_id, current_slot, subject_code, creator_id, block, reg};
+            results.push(row);
+        }
+
+        res.json(responseUtil.success({data: {results}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
