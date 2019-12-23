@@ -1,6 +1,14 @@
 const dbPool = require("../db");
 
-async function checkShiftRoom(shift_id, room_id, subject_code) {
+async function checkShiftRoom(shift_id, room_id) {
+    const [rows] = await dbPool.query(`SELECT *
+                                    FROM shifts_rooms
+                                    WHERE shift_id = ${shift_id}
+                                    AND room_id = ${room_id}`);
+    return [rows];
+}
+
+async function checkDuplication(shift_id, room_id, subject_code){
     const [rows] = await dbPool.query(`SELECT *
                                     FROM shifts_rooms
                                     WHERE shift_id = ${shift_id}
@@ -35,16 +43,15 @@ async function deleteById(id) {
                             WHERE id = ${id}`);
 }
 
-async function getAll(offset, limit) {
+async function getAll() {
     const [rows] = await dbPool.query(`SELECT * 
-                                        FROM shifts_rooms
-                                        LIMIT ${limit}
-                                        OFFSET ${offset}`);
+                                        FROM shifts_rooms`);
     return [rows];
 }
 
 module.exports = {
     checkShiftRoom,
+    checkDuplication,
     create,
     getShiftRoomById,
     update,

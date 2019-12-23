@@ -79,14 +79,9 @@ async function deleteShift(req, res) {
 }
 
 async function getAllShift(req, res) {
+    const {examination_id} = req.tokenData
     try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
-        [shifts] = await shift.getAllShifts(offset, limit);
+        [shifts] = await shift.getAllShifts(examination_id);
         res.json(responseUtil.success({data: {shifts}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));

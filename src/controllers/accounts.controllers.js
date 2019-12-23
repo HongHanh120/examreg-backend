@@ -5,6 +5,7 @@ const responseUtil = require("../utils/response.util");
 
 const account = require("../models/accounts.models");
 const examination = require("../models/examinations.models");
+const subjectClass = require("../models/classes.models");
 
 async function login(req, res) {
     const {
@@ -89,30 +90,20 @@ async function register(req, res) {
     }
 }
 
-async function getStudentList(req, res) {
-    try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
-        const [rows] = await account.getAllStudent(offset, limit);
-        res.json(responseUtil.success({data: {rows}}));
-    } catch (err) {
-        res.json(responseUtil.fail({reason: err.message}));
-    }
-}
-
 async function getAdminList(req, res) {
+    const {keywords} = req.query;
     try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
-        const [rows] = await account.getAllAdmin(offset, limit);
+        let rows = [];
+        if (keywords) {
+            let [admin] = await account.getUserByKeyword(keywords, 1);
+            let [superAdmin] = await account.getUserByKeyword(keywords, 3);
+            for (let i = 0; i < admin.length; i++)
+                rows.push(admin[i]);
+            for (let i = 0; i < superAdmin.length; i++)
+                rows.push(superAdmin[i]);
+            console.log(rows);
+        } else
+            [rows] = await account.getAllAdmin();
         res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -162,6 +153,7 @@ async function getCurrentExaminationToken(req, res) {
         let [rows] = await examination.getExaminationById(examination_id);
         if (!rows.length)
             throw new Error("This examination is not existed");
+        console.log(req.tokenData.id);
         const now = Date.now().toString().slice(0, 10);
         const expToken = req.tokenData.exp - now;
 
@@ -183,7 +175,8 @@ async function updateInformation(req, res) {
     const {id} = req.tokenData;
     const {
         fullname,
-        date_of_birth
+        date_of_birth,
+        email
     } = req.body;
 
     try {
@@ -191,12 +184,18 @@ async function updateInformation(req, res) {
             throw new Error("Fullname field is missing");
         if (!date_of_birth)
             throw new Error("Date_of_birth field is missing");
+        if (!email)
+            throw new Error("Email field is missing");
 
         const [existedUser] = await account.getUserById(id);
         if (!existedUser.length)
             throw new Error("This user is not existed");
 
-        await account.updateInformation(id, fullname, date_of_birth);
+        const [existedEmail] = await account.getUserByEmail(email);
+        if (existedEmail.length)
+            throw new Error("This email is used by other account");
+
+        await account.updateInformation(id, fullname, date_of_birth, email);
         res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -215,13 +214,54 @@ async function deleteUser(req, res) {
     }
 }
 
+async function getAllAccount(req, res) {
+    const {keywords} = req.query;
+    try {
+        let rows = [];
+        if (keywords)
+            [rows] = await account.getUserByKeyword(keywords, "");
+        else
+            [rows] = await account.getAllAccounts();
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
+async function getAllNotEligibleStudents(req, res) {
+    const {examination_id} = req.tokenData;
+    try {
+        let rows = [];
+        let [notEligibleStudents] = await account.getNotEligibleStudent(examination_id);
+        for (let i = 0; i < notEligibleStudents.length; i++) {
+            let id = notEligibleStudents[0].id;
+            let username = notEligibleStudents[0].username;
+            let fullname = notEligibleStudents[0].fullname;
+            let course_class = notEligibleStudents[0].course_class;
+            let nameSubject = notEligibleStudents[0].name;
+
+            let [subjectClassInf] = await subjectClass.getClassById(notEligibleStudents[i].class_code_id);
+            let subject_code = subjectClassInf[0].subject_code;
+            let class_code = subjectClassInf[0].class_code;
+            let subject_class = subject_code + " " + class_code.toString();
+
+            let row = {id, username, fullname, course_class, subject_class, nameSubject};
+            rows.push(row);
+        }
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
 module.exports = {
     login,
     register,
     changePassword,
-    getStudentList,
     getAdminList,
     getCurrentExaminationToken,
     updateInformation,
-    deleteUser
+    deleteUser,
+    getAllAccount,
+    getAllNotEligibleStudents
 };

@@ -17,11 +17,6 @@ router.put("/password",
     token.verify,
     accountController.changePassword);
 
-router.get("/student",
-    token.verify,
-    privilege.verify(2),
-    accountController.getStudentList);
-
 router.get("/admin",
     token.verify,
     privilege.verify(2),
@@ -31,7 +26,7 @@ router.get("/examination/:examination_id",
     token.verify,
     accountController.getCurrentExaminationToken);
 
-router.put("/information",
+router.put("/",
     token.verify,
     accountController.updateInformation);
 
@@ -40,5 +35,15 @@ router.delete("/",
     privilege.verify(2),
     role.verify,
     accountController.deleteUser);
+
+router.get("/",
+    token.verify,
+    privilege.verify(2),
+    accountController.getAllAccount);
+
+router.get("/eligibility",
+    examination_token.verify,
+    privilege.verify(2),
+    accountController.getAllNotEligibleStudents);
 
 module.exports = router;

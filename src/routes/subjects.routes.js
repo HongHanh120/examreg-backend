@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const subjectController = require("../controllers/subjects.controllers");
 const token = require("../middlewares/tokenLogin.middlewares");
+const examinationToken = require("../middlewares/tokenExamination.middlewares");5
 const privilege = require("../middlewares/privilege.middlewares");
 const multerMiddleware = require("../middlewares/multer.middlewares");
 
@@ -15,11 +16,6 @@ router.delete("/",
     privilege.verify(1),
     subjectController.deleteSubject);
 
-router.delete("/deleteMulti",
-    token.verify,
-    privilege.verify(1),
-    subjectController.deleteSubjects);
-
 router.put("/", token.verify,
     privilege.verify(1),
     subjectController.updateSubject);
@@ -29,7 +25,7 @@ router.get("/",
     privilege.verify(2),
     subjectController.getAllSubject);
 
-router.get("/search/",
+router.get("/search",
     token.verify,
     subjectController.getSubjectByKeyword);
 
@@ -42,5 +38,9 @@ router.post("/import",
     privilege.verify(2),
     multerMiddleware.upload.single("subjects"),
     subjectController.importSubjects);
+
+router.get("/examination",
+    examinationToken.verify,
+    subjectController.getSubjectsInExam);
 
 module.exports = router;

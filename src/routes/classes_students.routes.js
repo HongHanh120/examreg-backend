@@ -12,4 +12,9 @@ router.post("/import",
     multerMiddleware.upload.single("classesStudents"),
     classStudentController.importClassesStudents);
 
+router.get("/",
+    examinationToken.verify,
+    privilege.verify(2),
+    classStudentController.getStudentsOfClass);
+
 module.exports = router;

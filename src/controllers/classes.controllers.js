@@ -88,13 +88,7 @@ async function getInformation(req, res) {
 async function getAllClass(req, res) {
     const {examination_id} = req.tokenData;
     try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
-        const [rows] = await classModel.getAllClass(examination_id, offset, limit);
+        const [rows] = await classModel.getAllClass(examination_id);
 
         res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
@@ -131,33 +125,6 @@ async function updateClass(req, res) {
     }
 }
 
-async function deleteClasses(req, res) {
-    const {id} = req.query;
-    try {
-        if (!id)
-            throw new Error("Id field is missing");
-        let existedClasses = [];
-        let notExistedClasses = [];
-        for (let i = 0; i < id.length; i++) {
-            console.log(id[i]);
-            const [existedClass] = await classModel.getClassById(id[i]);
-            console.log(existedClasses);
-            if (existedClass.length)
-                existedClasses.push(id[i]);
-            else
-                notExistedClasses.push(id[i]);
-        }
-        for (let i = 0; i < existedClasses.length; i++) {
-            await classModel.deleteClassById(existedClasses[i]);
-        }
-        if (notExistedClasses.length)
-            throw new Error("These classes is not existed: " + JSON.stringify(notExistedClasses));
-        res.json(responseUtil.success({data: {}}));
-    } catch (err) {
-        res.json(responseUtil.fail({reason: err.message}));
-    }
-};
-
 async function deleteClass(req, res) {
     const {id} = req.query;
     try {
@@ -178,18 +145,12 @@ async function getClassByKeyword(req, res) {
     const {examination_id} = req.tokenData;
     const {keywords} = req.query;
     try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
         let classes = [];
 
         if (keywords)
-            [classes] = await classModel.getClassByKeyWord(examination_id, offset, limit, keywords);
+            [classes] = await classModel.getClassByKeyWord(examination_id, keywords);
         else
-            [classes] = await classModel.getAllClass(examination_id, offset, limit);
+            [classes] = await classModel.getAllClass(examination_id);
 
         res.json(responseUtil.success({data: {classes: classes}}));
     } catch (err) {
@@ -201,7 +162,6 @@ module.exports = {
     importClasses,
     createClass,
     deleteClass,
-    deleteClasses,
     getAllClass,
     updateClass,
     getClassByKeyword,

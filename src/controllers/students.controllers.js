@@ -50,10 +50,31 @@ async function importStudents(req, res) {
     }
 }
 
-async function getInformation(req, res) {
+async function getStudentList(req, res) {
+    const {keywords} = req.query;
+    try {
+        let rows = [];
+        if (keywords)
+            [rows] = await account.getUserByKeyword(keywords, 2);
+        else
+            [rows] = await account.getAllStudent();
+        res.json(responseUtil.success({data: {rows}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
 
+async function getSubjectsOfStudent(req, res) {
+    const {examination_id, id} = req.tokenData;
+    try {
+
+        res.json(responseUtil.success({data: {}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
 }
 
 module.exports = {
-    importStudents
+    importStudents,
+    getStudentList
 };

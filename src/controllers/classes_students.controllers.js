@@ -33,9 +33,12 @@ async function importClassesStudents(req, res) {
             class_student.class_code_id = rows[0].id;
 
             const [existedStudent] =
-                await classStudent.verifyDuplication(class_student.student_code, class_student.class_code_id, examination_id);
+                await classStudent.verifyDuplication(class_student.student_code,
+                                                    class_student.class_code_id,
+                                                    examination_id);
             const [existedSubject] =
-                await classStudent.checkSubjectCode(class_student.student_code, subject_code, examination_id);
+                await classStudent.checkSubjectCode(class_student.student_code,
+                                                    subject_code, examination_id);
 
             if (existedStudent.length)
                 existedElements.push({class_student});
@@ -58,6 +61,22 @@ async function importClassesStudents(req, res) {
     }
 }
 
+async function getStudentsOfClass(req, res) {
+    const {examination_id} = req.tokenData;
+    const {class_code_id} = req.query;
+    try {
+        if (!class_code_id)
+            throw new Error("Class_code_id field is missing");
+
+        const [rows] = await classStudent.getStudentInClass(examination_id, class_code_id);
+        res.json(responseUtil.success({data: {rows}}));
+
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
 module.exports = {
-    importClassesStudents
+    importClassesStudents,
+    getStudentsOfClass
 };

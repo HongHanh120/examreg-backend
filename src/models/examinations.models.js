@@ -20,11 +20,9 @@ async function getExaminationById(id) {
     return [rows];
 }
 
-async function getAllExaminations(offset, limit) {
+async function getAllExaminations() {
     const [rows] = await dbPool.query(`SELECT * 
-                                       FROM examinations
-                                       LIMIT ${limit}
-                                       OFFSET ${offset}`);
+                                       FROM examinations`);
     return [rows];
 }
 
@@ -34,13 +32,11 @@ async function updateExamination(id, name) {
                         WHERE id = ${id}`);
 }
 
-async function getExaminationByKeyword(offset, limit, keywords) {
+async function getExaminationByKeyword(keywords) {
     const [rows] = await dbPool.query(`SELECT * 
                                        FROM examinations
                                        WHERE MATCH(name)
-                                       AGAINST('+${keywords}*' IN boolean MODE)
-                                       LIMIT ${limit}
-                                       OFFSET ${offset}`);
+                                       AGAINST('+${keywords}*' IN boolean MODE)`);
     return [rows];
 }
 

@@ -44,32 +44,6 @@ async function deleteSubject(req, res) {
     }
 }
 
-async function deleteSubjects(req, res) {
-    const {subject_code} = req.query;
-    try {
-        if (!subject_code)
-            throw new Error("Subject_code field is missing");
-        let existedSubjects = [];
-        let notExistedSubjects = [];
-        for (let i = 0; i < subject_code.length; i++) {
-            const [existedSubject] = await subject.getSubjectByCourseCode(subject_code[i]);
-            if (existedSubject.length)
-                existedSubjects.push(subject_code[i]);
-            else
-                notExistedSubjects.push(subject_code[i]);
-        }
-        for (let i = 0; i < existedSubjects.length; i++) {
-            await subject.deleteSubjectById(existedSubjects[i]);
-        }
-        if (notExistedSubjects.length)
-            throw new Error("These subjects is not existed:" + JSON.stringify(notExistedSubjects));
-
-        res.json(responseUtil.success({data: {}}));
-    } catch (err) {
-        res.json(responseUtil.fail({reason: err.message}));
-    }
-};
-
 async function updateSubject(req, res) {
     const {
         name,
@@ -98,13 +72,7 @@ async function updateSubject(req, res) {
 
 async function getAllSubject(req, res) {
     try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
-        [subjects] = await subject.getAllSubjects(offset, limit);
+        [subjects] = await subject.getAllSubjects();
         res.json(responseUtil.success({data: {subjects: subjects}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -114,17 +82,11 @@ async function getAllSubject(req, res) {
 async function getSubjectByKeyword(req, res) {
     const {keywords} = req.query;
     try {
-        let {page, pageSize} = req.query;
-        if (!page) page = 1;
-        if (!pageSize) pageSize = 20;
-        const offset = (page - 1) * pageSize;
-        const limit = Number(pageSize);
-
         let results = [];
         if (keywords)
-            [results] = await subject.findSubjectByKeyword(offset, limit, keywords);
+            [results] = await subject.findSubjectByKeyword(keywords);
         else
-            [results] = await subject.getAllSubjects(offset, limit);
+            [results] = await subject.getAllSubjects();
 
         res.json(responseUtil.success({data: {subjects: results}}));
     } catch (err) {
@@ -134,15 +96,15 @@ async function getSubjectByKeyword(req, res) {
 
 async function getInformation(req, res) {
     const {subjectCode} = req.query;
-    console.log(subjectCode);
     try {
         if (!subjectCode)
             throw new Error("Subject-code field is missing");
+
         let [existedSubject] = await subject.getSubjectByCourseCode(subjectCode);
-        console.log(existedSubject);
         if (!existedSubject.length)
             throw new Error("This subject is not existed");
         existedSubject = existedSubject[0];
+
         res.json(responseUtil.success({data: {existedSubject}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
@@ -185,13 +147,25 @@ async function importSubjects(req, res) {
     }
 }
 
+async function getSubjectsInExam(req, res) {
+    const {examination_id} = req.tokenData;
+    try {
+        let [subjects] = await subject.getSubjects(examination_id);
+        console.log(subjects);
+
+        res.json(responseUtil.success({data: {subjects}}));
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
 module.exports = {
     createSubject,
     updateSubject,
     deleteSubject,
-    deleteSubjects,
     getAllSubject,
     getSubjectByKeyword,
     getInformation,
-    importSubjects
+    importSubjects,
+    getSubjectsInExam
 };
