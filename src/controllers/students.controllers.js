@@ -131,15 +131,22 @@ async function registerExam(req, res) {
 }
 
 async function deleteSubject(req, res){
-    const {examination_id, id} = req.tokenData;
+    const {id} = req.tokenData;
+    const {shift_room_student_id} = req.query;
     try {
+        if (!shift_room_student_id)
+            throw new Error("Shift_room_student_id field is missing");
+        let [existed] = await shift_room_student.getById(shift_room_student_id);
+        if(!existed.length)
+            throw new Error("Shift_room_student_id is not existed");
+
         let [existedStudent] = await class_student.getStudentByAccountId(id);
         if (!existedStudent.length)
             throw new Error("Student is not existed");
 
-        const [result] = await shift_room_student.deleteById(id, examination_id);
+        await shift_room_student.deleteById(shift_room_student_id);
 
-        res.json(responseUtil.success({data: {result}}));
+        res.json(responseUtil.success({data: {}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
     }
@@ -149,5 +156,6 @@ module.exports = {
     importStudents,
     getStudentList,
     getSubjectOfRegister,
-    registerExam
+    registerExam,
+    deleteSubject
 };

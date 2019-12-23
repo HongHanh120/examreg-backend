@@ -25,4 +25,8 @@ router.post("/examreg",
     examinationToken.verify,
     studentController.registerExam);
 
+router.delete("/examreg",
+    examinationToken.verify,
+    studentController.deleteSubject);
+
 module.exports = router;
