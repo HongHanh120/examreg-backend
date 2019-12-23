@@ -55,6 +55,17 @@ async function getStudentInRoom(examination_id, shift_room_id){
     return [rows];
 }
 
+async function getSubjectInReg(id, examination_id){
+    const [rows] = await dbPool.query(`SELECT rooms.name AS room, shifts.name AS shift, shifts.start_time, shifts.time, shifts_rooms.subject_code
+                                      FROM shifts_rooms_students
+                                      INNER JOIN shifts_rooms ON shifts_rooms.id = shifts_rooms_students.shift_room_id
+                                      INNER JOIN classes_students ON shifts_rooms_students.student_id = classes_students.id
+                                      INNER JOIN rooms ON rooms.id = shifts_rooms.room_id
+                                      INNER JOIN shifts ON shifts.id = shifts_rooms.shift_id
+                                      WHERE classes_students.account_id = ${id} AND shifts.examination_id = ${examination_id}`);
+    return [rows];
+}
+
 module.exports = {
     checkShiftRoom,
     checkExist,
@@ -62,5 +73,6 @@ module.exports = {
     getById,
     deleteById,
     getAccountId,
-    getStudentInRoom
+    getStudentInRoom,
+    getSubjectInReg
 };
