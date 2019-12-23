@@ -57,6 +57,16 @@ async function getSubject(examination_id, account_id){
     return [rows];
 }
 
+async function getASubject(examination_id, account_id, subject_code){
+    const [rows] = await dbPool.query(`SELECT subjects.*, classes_students.eligibility, classes.class_code
+                                       FROM subjects
+                                       INNER JOIN classes ON classes.subject_code = subjects.subject_code
+                                       INNER JOIN classes_students ON classes.id = classes_students.class_code_id
+                                       WHERE classes_students.account_id = ${account_id} AND classes.examination_id = ${examination_id}
+                                                AND classes.subject_code = "${subject_code}"`);
+    return [rows];
+}
+
 module.exports = {
     verifyDuplication,
     create,
@@ -64,5 +74,6 @@ module.exports = {
     getStudentById,
     getStudentsInClass,
     getStudentByAccountId,
-    getSubject
+    getSubject,
+    getASubject
 };

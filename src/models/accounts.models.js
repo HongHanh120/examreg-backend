@@ -92,7 +92,7 @@ async function getUserByKeyword(keywords, role_id) {
 
 async function getNotEligibleStudent(examination_id) {
     const [rows] = await dbPool.query(`SELECT accounts.id, accounts.username, accounts.fullname, accounts.course_class,
-                                                   classes_students.class_code_id, subjects.name
+                                                   classes_students.class_code_id, subjects.name, subjects.subject_code
                                             FROM accounts
                                             INNER JOIN classes_students ON accounts.id = classes_students.account_id
                                             INNER JOIN classes ON classes.id = classes_students.class_code_id
