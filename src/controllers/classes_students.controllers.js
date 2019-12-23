@@ -61,6 +61,22 @@ async function importClassesStudents(req, res) {
     }
 }
 
+async function getStudentsOfClass(req, res) {
+    const {examination_id} = req.tokenData;
+    const {class_code_id} = req.query;
+    try {
+        if (!class_code_id)
+            throw new Error("Class_code_id field is missing");
+
+        const [rows] = await classStudent.getStudentInClass(examination_id, class_code_id);
+        res.json(responseUtil.success({data: {rows}}));
+
+    } catch (err) {
+        res.json(responseUtil.fail({reason: err.message}));
+    }
+}
+
 module.exports = {
-    importClassesStudents
+    importClassesStudents,
+    getStudentsOfClass
 };
