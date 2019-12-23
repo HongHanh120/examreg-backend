@@ -14,4 +14,8 @@ router.delete("/",
     examinationToken.verify,
     shiftRoomStudentController.deleteShiftRoomStudent);
 
+router.get("/examreg",
+    examinationToken.verify,
+    shiftRoomStudentController.getStudentOfShiftRoom);
+
 module.exports = router;
