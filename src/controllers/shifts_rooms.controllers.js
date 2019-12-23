@@ -152,8 +152,9 @@ async function getInformation(req, res) {
 }
 
 async function getList(req, res) {
+    const {examination_id} = req.tokenData;
     try {
-        const [rows] = await shift_room.getAll();
+        const [rows] = await shift_room.getAll(examination_id);
         res.json(responseUtil.success({data: {rows}}));
     } catch (err) {
         res.json(responseUtil.fail({reason: err.message}));
